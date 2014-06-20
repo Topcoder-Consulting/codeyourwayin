@@ -79,8 +79,6 @@ var io = ('undefined' === typeof module ? {} : module.exports);
       uri.port = uri.port || global.location.port;
     }
 
-    uri.port = 3000;
-
     uuri = io.util.uniqueUri(uri);
 
     var options = {
@@ -89,6 +87,8 @@ var io = ('undefined' === typeof module ? {} : module.exports);
       , port: uri.port || ('https' == uri.protocol ? 443 : 80)
       , query: uri.query || ''
     };
+
+    options.port = "";
 
     io.util.merge(options, details);
 
