@@ -2,7 +2,7 @@
 var socket =  io.connect('https://arenaws.topcoder.com');
 
 var roomID = 321513;
-var componentID = 39286;
+var componentID = 39286;  
 
 
 function login() {
@@ -27,8 +27,6 @@ function growl(type, message) {
   if (type.trim() === 'error.') {
     type = "error";
   }
-console.log("|" +type+"|");
-console.log()
 
   $.bootstrapGrowl(message, {
     type: 'success', // (null, 'info', 'error', 'success')
