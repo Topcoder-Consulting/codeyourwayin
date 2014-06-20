@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+  h2 Welcome to the Arena
+
+  | Language: 
+  select#language
+    option(value='1', selected='true') Java
+    option(value='3') C++
+    option(value='4') C#
+    option(value='5') VB
+    option(value='6') Python
+    option(value='7') R
+
+  textarea#code.input-full-width(rows='10' cols='100', placeholder='Code' style='margin-top:10px')  
+
+  button.btn(type='button', onclick='compile()', style='margin-right:5px') Compile
+  button.btn(type='button', onclick='compile()', style='margin-right:5px') Test
+  button.btn(type='button', onclick='compile()') Submit
