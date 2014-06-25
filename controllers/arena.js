@@ -6,10 +6,18 @@ var User = require('../models/User');
  */
 
 exports.index = function(req, res) {
-  res.render('arena/index', {
-    title: 'Arena',
-    loadArena: true
-  });
+  if (typeof req.user.goldenTicket === 'undefined') {
+    res.render('arena/index', {
+      title: 'Arena',
+      loadArena: true,
+      roomId: 321513,
+      componentId: 39763,
+      seed: req.user._id
+    });
+  } else {
+    req.flash('info', { msg: "You've already coded your way into TCO14. Your code is below." });
+    res.redirect('/account');
+  }
 };
 
 exports.success = function(req, res) {

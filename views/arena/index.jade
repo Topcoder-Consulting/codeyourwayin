@@ -3,17 +3,58 @@ extends ../layout
 block content
   h2 Welcome to the Arena
 
-  | Language: 
-  select#language
-    option(value='1', selected='true') Java
-    option(value='3') C++
-    option(value='4') C#
-    option(value='5') VB
-    option(value='6') Python
-    option(value='7') R
+  form#hidden(action='/arena/success', method='post')
+    input(type='hidden', name='_csrf', value=_csrf)
+    input#seed(type='hidden',  name="seed" value='#{seed}')
+    input#roomId(type='hidden', name="roomId" value='#{roomId}')
+    input#componentId(type='hidden', name="componentId" value='#{componentId}')
 
-  textarea#code.input-full-width(rows='10' cols='100', placeholder='Code' style='margin-top:10px')  
+  p#loading.bg-success(style='margin: 25px; padding: 25px; width: 500px;') Building the arena. This may take a second or two....
 
-  button.btn(type='button', onclick='compile()', style='margin-right:5px') Compile
-  button.btn(type='button', onclick='compile()', style='margin-right:5px') Test
-  button.btn(type='button', onclick='compile()') Submit
+  #problem(style='display: none')
+
+    #title.lead(style='padding-top:15px')
+    #instruction(style='margin-top:15px;margin-bottom:15px')
+      | Loading your problem. Please wait....
+
+    #definition(style='padding-bottom:15px') 
+
+    #constraints(style='padding-bottom:25px') 
+
+    form(role='form')
+      .form-group
+        label(for='language') Your Development Language &nbsp;
+        select#language(onchange="changeLanguage();")
+          option(value='1', selected='true') Java
+          option(value='3') C++
+          option(value='4') C#
+          option(value='5') VB
+          option(value='6') Python
+
+      .form-group
+        #editor 
+
+      button.btn.btn-primary(type='button', onclick='compile()') Compile Your Code
+
+    h3(style='padding-top:10px') Testing
+
+    blockquote
+      p
+      | Enter test arguments for your code below. Comma separated, strings in quotes, arrays in square brackets.
+
+    form(role='form')
+      .form-group
+        input#args(type='text', class='col-xs-8')
+      br
+      br
+      button.btn.btn-primary(type='button', onclick='testProblem()') Run Your Test
+
+    h3(style='padding-top:10px') Submit & Run System Tests
+
+    blockquote
+      p
+      | When your code is complete and you are satisified with its functionality, submit it to run all system tests and determine whether it passes. You can submit your code as many times as you deem necessary.
+
+    button.btn.btn-danger.btn-lg#submitBtn(type='button', onclick='submit()') Submit 
+    | &nbsp;
+    button.btn.btn-success.btn-lg#successBtn(type='button', onclick='success()') Success! Claim your code! 

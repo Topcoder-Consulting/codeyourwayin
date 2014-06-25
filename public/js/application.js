@@ -17,5 +17,7 @@
 //= require lib/bootstrap.min
 //= require lib/moment.min
 //= require socket.io/socket.io
+//= require lib/lodash.min
+//= require lib/string.min
 //= require lib/jquery.bootstrap-growl.min
 //= require main

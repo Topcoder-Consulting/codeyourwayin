@@ -4,7 +4,7 @@ block content
   .page-header
     h3 Code Your Way In "Golden Tickets"
     hr
-    if (user.goldenTicket != '')
+    if (typeof user.goldenTicket != 'undefined')
       | Use the code below to claim your free entry into 
       a(href='http://www.tco14.com') TCO14.
       p.lead(style='margin:10px')
@@ -12,7 +12,7 @@ block content
     else
       | No "golden tickets" yet for TCO14. Head over to the Arena and get coding!
 
-    h3 Profile Information    
+    h3(style="padding-top:25px") Profile Information    
 
   form.form-horizontal(action='/account/profile', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
