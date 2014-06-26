@@ -115,7 +115,7 @@ app.use(function(req, res, next) {
 app.use(function(req, res, next) {
 
   var path = req.path.split('/')[1];
-  if ((path === '' || path === '/arena') && typeof req.user === 'undefined') {
+  if ((path === '' || path === '/arena' || '/login') && typeof req.user === 'undefined') {
   // if (!/auth|login|logout|signup|img|fonts|favicon/i.test(path) && typeof req.user === 'undefined') {
 
     // if they are not logged and we found the tc cookie, log them in
