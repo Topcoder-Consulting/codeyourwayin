@@ -49,13 +49,25 @@ function testProblem() {
 }
 
 function submit() {
-  socket.emit('SubmitRequest', { componentID: componentID });
+  socket.emit('PracticeSystemTestRequest', { roomID: roomID, componentIds: [componentID] });
+  //socket.emit('SubmitRequest', { componentID: componentID });
 }
 
 socket.on('connect', function() {
   console.log('Client has connected to the server!');
   login();
 });  
+
+socket.on('PracticeSystemTestResponse', function(data) {
+  console.log('====== PracticeSystemTestResponse')
+  console.log(data)
+});  
+
+socket.on('PracticeSystemTestResultResponse', function(data) {
+  console.log('====== PracticeSystemTestResultResponse')
+  console.log(data)
+});  
+
 
 // after logging in
 socket.on('CreateRoundListResponse', function (data) {

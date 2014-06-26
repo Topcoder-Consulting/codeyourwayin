@@ -19,5 +19,8 @@
 //= require socket.io/socket.io
 //= require lib/lodash.min
 //= require lib/string.min
+//= require lib/auth0
+//= require lib/jwt-auth0
+//= require lib/jquery.cookie
 //= require lib/jquery.bootstrap-growl.min
 //= require main

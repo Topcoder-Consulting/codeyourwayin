@@ -11,9 +11,11 @@ var logger = require('morgan');
 var errorHandler = require('errorhandler');
 var csrf = require('lusca').csrf();
 var methodOverride = require('method-override');
+var autologin = require('./lib/autologin');
 
 var _ = require('lodash');
 var MongoStore = require('connect-mongo')({ session: session });
+var User = require('./models/User');
 var flash = require('express-flash');
 var path = require('path');
 var mongoose = require('mongoose');
@@ -111,13 +113,55 @@ app.use(function(req, res, next) {
 
 // check for topcoder cookie
 app.use(function(req, res, next) {
-  if (typeof req.user === 'undefined') {
-    if (typeof req.query.handle != 'undefined') {
-      console.log('found handle, loggin in...');
-      res.redirect('/autoLogin');
-    }
-  } 
-  next();
+
+  var path = req.path.split('/')[1];
+  if ((path === '' || path === '/arena') && typeof req.user === 'undefined') {
+  // if (!/auth|login|logout|signup|img|fonts|favicon/i.test(path) && typeof req.user === 'undefined') {
+
+    // if they are not logged and we found the tc cookie, log them in
+    if (typeof req.cookies.tcjwt != 'undefined') {
+      console.log('Found topcoder cookie. Autologging user in.');
+      autologin.findUser(req.cookies.tcjwt)
+        .then(function (mongoUser) {
+
+          var user = new User({
+            email: mongoUser.email,
+            password: mongoUser.password,
+            profile: { name: mongoUser.handle }
+          });
+
+          if (mongoUser.exists) {
+            console.log('Found ' + mongoUser.handle + ' in mongodb.'); 
+            // hack the email and password into the request for passport
+            req.body.email = mongoUser.email;
+            req.body.password = mongoUser.password;
+            passport.authenticate('local', function(err, user, info) {
+              if (err) return next(err);
+              req.logIn(user, function(err) {
+                if (err) return next(err);
+                res.redirect(req.session.returnTo || '/');
+              });
+            })(req, res, next);
+          } else {
+            console.log('Could not find ' + mongoUser.handle + ' in mongodb.');
+            user.save(function(err) {
+              if (err) return next(err);
+              req.logIn(user, function(err) {
+                if (err) return next(err);
+                res.redirect(req.session.returnTo || '/');
+              });
+            });       
+          }
+
+        }).fail(function(err) {
+          // TODO -- test with an error. should send to 500 error page
+          res.redirect(req.session.returnTo || '/');
+        });   
+    }    
+
+  } else {
+    next();
+  }
 });
 
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: week }));
