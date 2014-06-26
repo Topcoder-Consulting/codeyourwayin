@@ -7,50 +7,6 @@ var User = require('../models/User');
 var secrets = require('../config/secrets');
 
 /**
- * POST /autologin
- * Looks at the topcoder cookie and logs the user in. Creates a record if they don't exist.
- */
-
-exports.autoLogin = function(req, res, next) {
-
-  var email = 'jdouglas@appirio.com';
-  var handle = 'jeffdonthemic';
-  var password = '12345678a';
-
-  var user = new User({
-    email: email,
-    password: password,
-    profile: { name: handle }
-  });
-
-  User.findOne({ email: email }, function(err, existingUser) {
-    if (existingUser) {
-
-      // hack the email and password into the request for passport
-      req.body.email = email;
-      req.body.password = password;
-
-      passport.authenticate('local', function(err, user, info) {
-        if (err) return next(err);
-        req.logIn(user, function(err) {
-          if (err) return next(err);
-          res.redirect(req.session.returnTo || '/');
-        });
-      })(req, res, next);
-
-    } else {
-      user.save(function(err) {
-        if (err) return next(err);
-        req.logIn(user, function(err) {
-          if (err) return next(err);
-          res.redirect(req.session.returnTo || '/');
-        });
-      });
-    }
-  });
-};
-
-/**
  * GET /login
  * Login page.
  */
@@ -161,7 +117,6 @@ exports.postSignup = function(req, res, next) {
  */
 
 exports.getAccount = function(req, res) {
-  console.log(req.user.goldenTicket);
   res.render('account/profile', {
     title: 'Account Management'
   });
@@ -225,9 +180,9 @@ exports.postUpdatePassword = function(req, res, next) {
  */
 
 exports.postDeleteAccount = function(req, res, next) {
+  console.log('deleting');
   User.remove({ _id: req.user.id }, function(err) {
     if (err) return next(err);
-    req.logout();
     req.flash('info', { msg: 'Your account has been deleted.' });
     res.redirect('/');
   });

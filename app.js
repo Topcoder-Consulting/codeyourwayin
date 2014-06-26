@@ -131,7 +131,7 @@ app.use(function(req, res, next) {
           });
 
           if (mongoUser.exists) {
-            console.log('Found ' + mongoUser.handle + ' in mongodb.'); 
+            console.log('Found ' + mongoUser.handle + ' in mongodb. Authenticating user.'); 
             // hack the email and password into the request for passport
             req.body.email = mongoUser.email;
             req.body.password = mongoUser.password;
@@ -143,7 +143,7 @@ app.use(function(req, res, next) {
               });
             })(req, res, next);
           } else {
-            console.log('Could not find ' + mongoUser.handle + ' in mongodb.');
+            console.log('Could not find ' + mongoUser.handle + ' in mongodb. Adding new record.');
             user.save(function(err) {
               if (err) return next(err);
               req.logIn(user, function(err) {
@@ -157,8 +157,10 @@ app.use(function(req, res, next) {
           // TODO -- test with an error. should send to 500 error page
           res.redirect(req.session.returnTo || '/');
         });   
-    }    
-
+    // couldn't find cookie
+    }  else {
+      next();
+    }  
   } else {
     next();
   }
@@ -171,7 +173,6 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: week }));
  */
 
 app.get('/', homeController.index);
-app.get('/autologin', userController.autoLogin);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
