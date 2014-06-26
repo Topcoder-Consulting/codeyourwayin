@@ -113,10 +113,8 @@ app.use(function(req, res, next) {
 
 // check for topcoder cookie
 app.use(function(req, res, next) {
-
   var path = req.path.split('/')[1];
-  if ((path === '' || path === '/arena' || '/login') && typeof req.user === 'undefined') {
-  // if (!/auth|login|logout|signup|img|fonts|favicon/i.test(path) && typeof req.user === 'undefined') {
+  if ((/|arena|login/i.test(path)) && typeof req.user === 'undefined') {
 
     // if they are not logged and we found the tc cookie, log them in
     if (typeof req.cookies.tcjwt != 'undefined') {
@@ -127,7 +125,7 @@ app.use(function(req, res, next) {
           var user = new User({
             email: mongoUser.email,
             password: mongoUser.password,
-            profile: { name: mongoUser.handle }
+            profile: { name: mongoUser.handle, picture: mongoUser.picture }
           });
 
           if (mongoUser.exists) {
