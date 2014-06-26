@@ -125,7 +125,11 @@ app.use(function(req, res, next) {
           var user = new User({
             email: mongoUser.email,
             password: mongoUser.password,
-            profile: { name: mongoUser.handle, picture: mongoUser.picture }
+            profile: { 
+              name: mongoUser.handle, 
+              picture: mongoUser.picture,
+              location: mongoUser.location
+            }
           });
 
           if (mongoUser.exists) {
