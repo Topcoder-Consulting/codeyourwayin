@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo Client</title>
+	<link href="bootstrap.css" rel="stylesheet">
+
+	<style>
+		body { 
+			padding:20px;
+		}
+		#console { 
+			height: 400px; 
+			overflow: auto; 
+		}
+		.username-msg {color:orange;}
+		.connect-msg {color:green;}
+		.disconnect-msg {color:red;}
+		.error-msg {color:red;}
+		.normal-msg {color:#888}
+	</style>
+	<script src="js/socket.io/socket.io.js"></script>
+	<script src="js/moment.min.js"></script>
+	<script src="js/jquery-1.7.2.min.js"></script>
+	
+	<script>
+		var userName = '';
+		var socket =  io.connect('https://arenaws.topcoder.com');
+
+		socket.on('connect', function() {
+			output('<span class="connect-msg">Client has connected to the server!</span>');
+		});
+		socket.on('disconnect', function() {
+			output('<span class="disconnect-msg">The client has disconnected!</span>');
+		});
+		socket.on('broadcast', function(data) {
+			output('<span class="username-msg">' + data.username + ':</span> ' + data.message);
+		});
+
+		socket.on('AssignComponentResponse', function (data) {
+			output('<span class="normal-msg">Received AssignComponentResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('AssignComponentsResponse', function (data) {
+			output('<span class="normal-msg">Received AssignComponentsResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('BaseResponse', function (data) {
+			output('<span class="normal-msg">Received BaseResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('ChallengeInfoResponse', function (data) {
+			output('<span class="normal-msg">Received ChallengeInfoResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('CoderHistoryResponse', function (data) {
+			output('<span class="normal-msg">Received CoderHistoryResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('ComponentAssignmentDataResponse', function (data) {
+			output('<span class="normal-msg">Received ComponentAssignmentDataResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('CreateCategoryListResponse', function (data) {
+			output('<span class="normal-msg">Received CreateCategoryListResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('CreateChallengeTableResponse', function (data) {
+			// console.log('Who is in the room ----');
+			// console.log(data);
+			// output('<span class="normal-msg">Received CreateChallengeTableResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('CreateLeaderBoardResponse', function (data) {
+			output('<span class="normal-msg">Received CreateLeaderBoardResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('CreateMenuResponse', function (data) {
+			output('<span class="normal-msg">Received CreateMenuResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('CreateProblemsResponse', function (data) {
+			// this is what is returned when you enter a room. it's the list of components
+			console.log('Returning CreateProblemsResponse...')
+			console.log(data);
+			output('<span class="normal-msg">Received CreateProblemsResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('CreateRoomListResponse', function (data) {
+			output('<span class="normal-msg">Received CreateRoomListResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('CreateRoundListResponse', function (data) {
+			output('<span class="normal-msg">Received CreateRoundListResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+			if(data.type && data.type === 1) {
+				if(data.roundData) {
+					$.each(data.roundData, function(index, entity) {
+						$("#practiceRoomList").append("<option value='"+entity.practiceRoomID+"'>"+entity.contestName+"</option>");
+					});
+				}
+			}
+		});
+		socket.on('CreateTeamListResponse', function (data) {
+			output('<span class="normal-msg">Received CreateTeamListResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('CreateUserListResponse', function (data) {
+			output('<span class="normal-msg">Received CreateUserListResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('CreateVisitedPracticeResponse', function (data) {
+			output('<span class="normal-msg">Received CreateVisitedPracticeResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('EnableRoundResponse', function (data) {
+			output('<span class="normal-msg">Received EnableRoundResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('EndSyncResponse', function (data) {
+			output('<span class="normal-msg">Received EndSyncResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('EnterRoomResponse', function (data) {
+			output('<span class="normal-msg">Received EnterRoomResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('ExchangeKeyResponse', function (data) {
+			output('<span class="normal-msg">Received ExchangeKeyResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('ForcedLogoutResponse', function (data) {
+			output('<span class="normal-msg">Received ForcedLogoutResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('GetAdminBroadcastResponse', function (data) {
+			output('<span class="normal-msg">Received GetAdminBroadcastResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('GetCurrentAppletVersionResponse', function (data) {
+			output('<span class="normal-msg">Received GetCurrentAppletVersionResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('GetImportantMessagesResponse', function (data) {
+			output('<span class="normal-msg">Received GetImportantMessagesResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('GetProblemResponse', function (data) {
+			// this is the actual details of the component!!
+			console.log('Here is the details of the component.')
+			console.log(data)
+			output('<span class="normal-msg">Received GetProblemResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('GetTeamProblemResponse', function (data) {
+			output('<span class="normal-msg">Received GetTeamProblemResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('ImportantMessageResponse', function (data) {
+			output('<span class="normal-msg">Received ImportantMessageResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('KeepAliveInitializationDataResponse', function (data) {
+			output('<span class="normal-msg">Received KeepAliveInitializationDataResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('KeepAliveResponse', function (data) {
+			output('<span class="normal-msg">Received KeepAliveResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('LoginResponse', function (data) {
+			output('<span class="normal-msg">Received LoginResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('LongTestResultsResponse', function (data) {
+			output('<span class="normal-msg">Received LongTestResultsResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('NoBadgeIdResponse', function (data) {
+			output('<span class="normal-msg">Received NoBadgeIdResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('OpenComponentResponse', function (data) {
+			console.log(data);
+			output('<span class="normal-msg">Received OpenComponentResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('PhaseDataResponse', function (data) {
+			output('<span class="normal-msg">Received PhaseDataResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('PopUpGenericResponse', function (data) {
+			output('<span class="normal-msg">Received PopUpGenericResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('PracticeSystemTestResponse', function (data) {
+			output('<span class="normal-msg">Received PracticeSystemTestResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('PracticeSystemTestResultResponse', function (data) {
+			output('<span class="normal-msg">Received PracticeSystemTestResultResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('ReconnectResponse', function (data) {
+			output('<span class="normal-msg">Received ReconnectResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('RegisteredRoundListResponse', function (data) {
+			output('<span class="normal-msg">Received RegisteredRoundListResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('RegisteredUsersResponse', function (data) {
+			output('<span class="normal-msg">Received RegisteredUsersResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('RoomInfoResponse', function (data) {
+			output('<span class="normal-msg">Received RoomInfoResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('RoundProblemsResponse', function (data) {
+			output('<span class="normal-msg">Received RoundProblemsResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('RoundScheduleResponse', function (data) {
+			output('<span class="normal-msg">Received RoundScheduleResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('RoundStatsResponse', function (data) {
+			output('<span class="normal-msg">Received RoundStatsResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('SingleBroadcastResponse', function (data) {
+			output('<span class="normal-msg">Received SingleBroadcastResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('StartSyncResponse', function (data) {
+			output('<span class="normal-msg">Received StartSyncResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('SubmissionHistoryResponse', function (data) {
+			output('<span class="normal-msg">Received SubmissionHistoryResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('SubmitResultsResponse', function (data) {
+			output('<span class="normal-msg">Received SubmitResultsResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('SynchTimeResponse', function (data) {
+			output('<span class="normal-msg">Received SynchTimeResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('SystestProgressResponse', function (data) {
+			output('<span class="normal-msg">Received SystestProgressResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('TestInfoResponse', function (data) {
+			output('<span class="normal-msg">Received TestInfoResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UnassignComponentResponse', function (data) {
+			output('<span class="normal-msg">Received UnassignComponentResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UnsynchronizeResponse', function (data) {
+			output('<span class="normal-msg">Received UnsynchronizeResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UpdateChatResponse', function (data) {
+			output('<span class="normal-msg">Received UpdateChatResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UpdateCoderComponentResponse', function (data) {
+			output('<span class="normal-msg">Received UpdateCoderComponentResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UpdateCoderPointsResponse', function (data) {
+			output('<span class="normal-msg">Received UpdateCoderPointsResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UpdateLeaderBoardResponse', function (data) {
+			output('<span class="normal-msg">Received UpdateLeaderBoardResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UpdateMenuResponse', function (data) {
+			output('<span class="normal-msg">Received UpdateMenuResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UpdatePreferencesResponse', function (data) {
+			output('<span class="normal-msg">Received UpdatePreferencesResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UpdateRoundListResponse', function (data) {
+			output('<span class="normal-msg">Received UpdateRoundListResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UpdateTeamListResponse', function (data) {
+			output('<span class="normal-msg">Received UpdateTeamListResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UpdateUserListResponse', function (data) {
+			output('<span class="normal-msg">Received UpdateUserListResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('UserInfoResponse', function (data) {
+			output('<span class="normal-msg">Received UserInfoResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('VerifyResponse', function (data) {
+			output('<span class="normal-msg">Received VerifyResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('VerifyResultResponse', function (data) {
+			output('<span class="normal-msg">Received VerifyResultResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('VoteResponse', function (data) {
+			output('<span class="normal-msg">Received VoteResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('VoteResultsResponse', function (data) {
+			output('<span class="normal-msg">Received VoteResultsResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('WatchableResponse', function (data) {
+			output('<span class="normal-msg">Received WatchableResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('WatchResponse', function (data) {
+			output('<span class="normal-msg">Received WatchResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('WLMyTeamInfoResponse', function (data) {
+			output('<span class="normal-msg">Received WLMyTeamInfoResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+		socket.on('WLTeamsInfoResponse', function (data) {
+			output('<span class="normal-msg">Received WLTeamsInfoResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
+		});
+
+		function login() {
+			var username = $('#username').val();
+			$('#username').val('');
+			var password = $('#password').val();
+			$('#password').val('');
+			socket.emit('LoginRequest', {username: username, password: password});
+		}
+		
+		function logout() {
+			socket.emit('LogoutRequest', {});
+		}
+		
+		function getActiveUsers() {
+			socket.emit('ActiveUsersRequest', {});
+		}
+
+		function getCoderInfo() {
+			var handle = $('#handle').val();
+			if (!handle || handle.trim().length <= 0) {
+				alert('User handle is empty.');
+				return;
+			}
+			socket.emit('CoderInfoRequest', {coder: handle, userType: 1});
+		}
+
+		function compileProblem() {
+			var componentID = $('#problemForm #componentID').val();
+			var code = $('#problemForm #code').val();
+			var language = $('#problemForm #language').val();
+			socket.emit('CompileRequest', { componentID: componentID, language: language, code: code });
+		}
+
+		function getProblemTestInfo() {
+			var componentID = $('#problemForm #componentID').val();
+			socket.emit('TestInfoRequest', { componentID: componentID });
+		}
+
+		function testProblem() {
+			var componentID = $('#problemForm #componentID').val();
+			var args = $('#problemForm #args').val();
+			try {
+				args = prepareTestArgs(JSON.parse('{"args": [' + args + ']}')['args']);
+			} catch (e) {
+				alert('Testing arguments are in invalid format.');
+				return;
+			}
+			console.log(args);
+			socket.emit('TestRequest', { args: args, componentID: componentID });
+		}
+
+		function prepareTestArgs(args) {
+			if (args instanceof Array) {
+				for (var i = 0; i < args.length; i++) {
+					args[i] = prepareTestArgs(args[i]);
+				}
+				return args;
+			} else if (args instanceof Object) {
+				throw 'Invalid argument.';
+			} else {
+				return String(args);
+			}
+		}
+
+		function submitProblem() {
+			var componentID = $('#problemForm #componentID').val();
+			socket.emit('SubmitRequest', { componentID: componentID });
+		}
+
+        function practiceSystemTestProblem() {
+            var componentID = $('#problemForm #componentID').val();
+            var roomID = $('#practiceRoomList').val();
+            socket.emit('PracticeSystemTestRequest', {roomID: roomID, componentID: [componentID] });
+            output('====  just emitted PracticeSystemTestRequest ====');
+        }
+
+		function submitYes() {
+			var componentID = $('#problemForm #componentID').val();
+			socket.emit('GenericPopupRequest', { popupType: 14, button: 0, surveyData: [parseInt(componentID)] });
+		}
+
+		function submitNo() {
+			var componentID = $('#problemForm #componentID').val();
+			socket.emit('GenericPopupRequest', { popupType: 14, button: 1, surveyData: [parseInt(componentID)] });
+		}
+
+                function openProblem() {
+			var componentID = $('#problemForm #componentID').val();
+			socket.emit('OpenComponentForCodingRequest', { componentID: componentID });
+                }
+
+                function moveRoom() {
+			var roomID = $('#roomForm #roomID').val();
+			socket.emit('MoveRequest', { moveType: 4, roomID: roomID });
+			socket.emit('EnterRequest', { roomID: -1 });
+                }
+
+                function enterPracticeRoom() {
+			var roomID = $('#roomForm #roomID').val();
+			socket.emit('MoveRequest', { moveType: 4, roomID: roomID });
+			socket.emit('EnterRequest', { roomID: -1 });
+			output('===== entering practice room ' + roomID + " =====")
+                }
+		function sendDisconnect() {
+			socket.disconnect();
+		}		
+		
+		function output(message) {
+			var currentTime = "<span class='time'>" +  moment().format('HH:mm:ss') + "</span>";
+			var element = $("<div>" + currentTime + " " + message + "</div>");
+			$('#console').prepend(element);
+		}
+
+                function validateInteger(name, value) {
+			if (!validateNotNullEmpty) return false;
+			if (isNaN(parseInt(value))) {
+				alert(name + ' is not a valid integer.');
+				return false;
+			}
+			return true;
+                }
+
+                function validateNotNullEmpty(name, value) {
+			if (!value || value.trim().length <= 0) {
+				alert(name + ' is empty.');
+				return flase;
+			}
+			return true;
+                }
+	</script>
+</head>
+
+<body>
+	
+	<h1>Demo Client - TopCoder Competition Engine - Web Socket Listener</h1>
+	
+	<br/>
+	<div id="console" class="well">
+	</div>
+
+	<form class="well form-inline" onsubmit="return false;">
+	   <input id="username" class="input-medium" type="text" value="jeffdonthemic"/>
+	   <input id="password" class="input-medium" type="password" value="FMGY9s9VoR"/>
+	   <button type="button" onClick="login()" class="btn">Login</button>
+	   <button type="button" onClick="logout()" class="btn">Logout</button>
+	   <button type="button" onClick="getActiveUsers()" class="btn">View Active Users</button>
+	</form>
+
+	<form class="well form-inline" onsubmit="return false;">
+	   <input id="handle" class="input-medium" type="text" placeholder="User Handle"/>
+	   <button type="button" onClick="getCoderInfo()" class="btn">Get Coder Info</button>
+	</form>
+
+	<form id="roomForm" class="well form-inline" onsubmit="return false;">
+	   <p>
+              Room ID:<input id="roomID" class="input-medium" type="text" placeholder="Room ID" value="321513"/>
+	      <button type="button" onClick="moveRoom()" class="btn">Move</button>
+           </p>
+
+        <p>
+        	Practice Room List:
+        	<select id="practiceRoomList">
+        	</select>
+        	<button type="button" onClick="enterPracticeRoom()" class="btn">Enter Practice Room</button>
+        </p>
+	</form>
+
+	<form id="problemForm" class="well form-inline" onsubmit="return false;">
+	   <p>
+              Component ID:<input id="componentID" class="input-medium" type="text" placeholder="Component ID" value="39763"/>
+              <button type="button" onClick="openProblem()" class="btn">Open</button>
+           </p>
+	   <p>
+              Solution language:<select id="language" class="input-medium">
+                 <option value="1" selected="true">Java</option>
+                 <option value="3">C++</option>
+                 <option value="4">C#</option>
+                 <option value="5">VB</option>
+                 <option value="6">Python</option>
+                 <option value="7">R</option>
+              </select> 
+           </p>
+	   <p>Solution:<br/><textarea id="code" class="input-full-width" rows="10" placeholder="Code"></textarea></p>
+	   <p><button type="button" onClick="compileProblem()" class="btn">Compile</button></p>
+	   <p><button type="button" onClick="getProblemTestInfo()" class="btn">Get Test Info</button></p>
+	   <p>Testing argument values:<input id="args" class="input-full-width" type="text" placeholder="Comma separated, strings in quotes, arrays in square brackets"/>
+ 	      <button type="button" onClick="testProblem()" class="btn">Test</button>
+          <button type="button" onClick="practiceSystemTestProblem()" class="btn">Practice System Test</button>
+       </p>
+	   <p><button type="button" onClick="submitProblem()" class="btn">Submit</button></p>
+	   <p>
+          <button type="button" onClick="submitYes()" class="btn">Answer "Yes"</button>
+	      <button type="button" onClick="submitNo()" class="btn">Answer "No"</button>
+       </p>
+	</form>
+</body>
+
+</html>
