@@ -1,3 +1,4 @@
+var Q = require("q");
 var User = require('../models/User');
 
 /**
@@ -22,16 +23,47 @@ exports.index = function(req, res) {
 
 exports.success = function(req, res) {
 
-  User.findById(req.user.id, function(err, user) {
-    if (err) return next(err);
-    user.goldenTicket = '12344';
+  if (typeof req.user.goldenTicket === 'undefined') {
 
-    user.save(function(err) {
-      if (err) return next(err);
-      res.render('arena/success', {
-        title: 'Success'
+    nextRegistrationCode()
+      .then(function(code) {
+        updateUser(req.user, code)
+          .then(function(code) {
+            res.render('arena/success', {
+              title: 'Success',
+              goldenTicket: code
+            });
+          }) ;
+      })
+      .fail(function(err) {
+        // TODO -- add 500 page
+        console.log(err)
       });
-    });
-  });
+
+  } else {
+    req.flash('info', { msg: "You've already coded your way into TCO14. Your code is below." });
+    res.redirect('/account');
+  }        
 
 };
+
+var updateUser = function(user, code) {
+  console.log(code);
+  var deferred = Q.defer();  
+  User.findByIdAndUpdate(user._id, { $set: { goldenTicket: code }}, function(err, doc){
+    deferred.resolve(code);
+  });  
+  return deferred.promise;  
+}
+
+var nextRegistrationCode = function() {
+  var deferred = Q.defer(); 
+  User.find({}).sort({goldenTicket: 'descending'}).limit(1).exec(function(err, items) {
+    if (!items[0].goldenTicket) {
+      deferred.resolve(1000); 
+    } else {
+      deferred.resolve(items[0].goldenTicket + 1);
+    }
+  }); 
+  return deferred.promise;  
+}
