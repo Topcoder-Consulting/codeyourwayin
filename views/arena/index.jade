@@ -49,22 +49,24 @@ block content
       br
       button.btn.btn-primary(type='button', onclick='testProblem()') Run Your Test
 
-    h3(style='padding-top:10px') Submit & Run System Tests
+    h3(style='padding-top:10px') Run System Tests
 
     blockquote
       p
       | When your code is complete and you are satisified with its functionality, submit it to run our system tests and determine whether it passes. You can submit your code as many times as you deem necessary. The test results will display in the table below.
 
-    button.btn.btn-danger.btn-lg#submitBtn(type='button', onclick='submit()') Submit 
+    button.btn.btn-primary#submitBtn(type='button', onclick='submit()') Run System Tests 
     | &nbsp;
-    button.btn.btn-success.btn-lg#successBtn(type='button', onclick='success()') Success! Claim your code! 
+    button.btn.btn-success#successBtn(type='button', onclick='success()') Success! Claim your code! 
 
-    h3(style='padding-top:10px') Test Results
+    #testResultsPanel
 
-    table#testresults.table
-      thead
-        tr
-          th Succeeded
-          th Expected
-          th Actual
-          th Args
+      h3(style='padding-top:10px') System Test Results
+
+      table#testresults.table
+        thead
+          tr
+            th Succeeded
+            th Expected
+            th Actual
+            th Args

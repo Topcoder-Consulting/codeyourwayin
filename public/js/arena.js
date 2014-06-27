@@ -5,6 +5,7 @@ $(function(){
   editor.setTheme("ace/theme/monokai");
   editor.getSession().setMode('ace/mode/java');
   $('#successBtn').hide();
+  $('#testResultsPanel').hide();
 });  
 
 var socket =  io.connect('https://arenaws.topcoder.com');
@@ -16,7 +17,7 @@ var roomID  = $('#roomId').val();
 var componentID  = $('#componentId').val();
 var roundID = 15941;  // 13674  - srm 616
 var isPracticeRoomOpen = false;
-var json;
+var allSystemTestsPass = true;
 
 function login() {
   var username = 'jeffdonthemic';
@@ -50,7 +51,14 @@ function testProblem() {
 
 function submit() {
   socket.emit('PracticeSystemTestRequest', { roomID: roomID, componentIds: [componentID] });
+  $('#testResultsPanel').show();
   $("#testresults").find('tr').slice(1).remove();
+  allSystemTestsPass = true;
+  setTimeout(function(){
+    if (allSystemTestsPass === true) {
+      $('#successBtn').show();
+    }
+  }, 3000);
 }
 
 socket.on('connect', function() {
@@ -65,9 +73,12 @@ socket.on('PracticeSystemTestResponse', function(data) {
 
 socket.on('PracticeSystemTestResultResponse', function(data) {
   console.log('====== PracticeSystemTestResultResponse')
-  var html = '<tr><td>'+data.resultData.succeeded+'</td><td>'+data.resultData.expectedValue+'</td><td>'+data.resultData.returnValue+'</td><td>'+S(data.resultData.args).replaceAll(',', ', ').s;+'</td></tr>';
+  var indicator = 'success';
+  if (data.resultData.succeeded === false) indicator = 'danger';
+  var html = '<tr class='+indicator+'><td>'+data.resultData.succeeded+'</td><td>'+data.resultData.expectedValue+'</td><td>'+data.resultData.returnValue+'</td><td>'+S(data.resultData.args).replaceAll(',', ', ').s;+'</td></tr>';
   $('#testresults tr').first().after(html);
-  console.log();
+  // set indicator that a least one test failed
+  if (data.resultData.succeeded === false) allSystemTestsPass = false;
 });  
 
 
@@ -79,15 +90,6 @@ socket.on('CreateRoundListResponse', function (data) {
     socket.emit('MoveRequest', { moveType: 4, roomID: roomID });
     socket.emit('EnterRequest', { roomID: -1 });      
   }
-  // if(data.type && data.type === 1) {
-  //   if(data.roundData) {
-  //     growl('info', 'Entering practice room');
-  //     console.log('Found practice rooms ' + data.roundData[0].contestName);
-  //     console.log('Entering room: ' + data.roundData[0].contestName + ' - ' + data.roundData[0].practiceRoomID);
-  //     socket.emit('MoveRequest', { moveType: 4, roomID: data.roundData[0].practiceRoomID });
-  //     socket.emit('EnterRequest', { roomID: -1 });          
-  //   }
-  // }
 });  
 
 // after moving to a room, open a problem
@@ -95,8 +97,6 @@ socket.on('CreateProblemsResponse', function (data) {
   if (data.roundID === roundID) {
     socket.emit('OpenComponentForCodingRequest', { componentID: componentID }); 
     growl('info', 'Loading a random problem.');
-    //console.log(data);
-    //console.log('Opening first problem...');   
   }
 });  
 
@@ -105,7 +105,6 @@ socket.on('GetProblemResponse', function (data) {
   $('#problem').fadeIn( "slow" )
   console.log('Here is the problem!!');
   console.log(data);
-  json = data.problem.primaryComponent;
   var problem = data.problem.primaryComponent;
   $('#title').text(data.problem.name);
   $('#instruction').text(S(problem.intro.text).replaceAll('null', '').s);
@@ -139,18 +138,13 @@ socket.on('GetProblemResponse', function (data) {
 socket.on('SubmitResultsResponse', function (data) {
   console.log('Received SubmitResultsResponse: ');
   console.log(data);
-  var type = 'danger';
-  if (S(data.message).contains('successful')) {
-    type = 'success';
-    $('#successBtn').show();
+  if (!S(data.message).contains('successful')) {
+    growl('danger', data.message, 5000);
   }
-  growl(type, data.message, 5000);
 });
 
 // after compiling chode
 socket.on('PopUpGenericResponse', function (data) {
-  console.log('Received PopUpGenericResponse --');
-  console.log(data);
 
   var type = 'info';
   var delay = 3000;
@@ -159,13 +153,16 @@ socket.on('PopUpGenericResponse', function (data) {
   if (data.message === 'You cannot compile blank code.' || S(data.message).contains('cannot submit')) {
     type = 'danger';
   } else if (S(data.message).contains('code compiled successfully')) {
+    // always submit when code successfully compiles
+    socket.emit('SubmitRequest', { componentID: componentID });
+    console.log("Submitting code for " + componentID);
     type = 'success'
   } else if (S(data.message).contains('error')) {
     type = 'danger';
     delay = 100000;
   } else if (data.title === 'Multiple Submission') {
     showModal = false;
-    console.log('Confirming resubmission for ' + componentID);
+    //console.log('Confirming resubmission for ' + componentID);
     socket.emit('GenericPopupRequest', { popupType: 14, button: 0, surveyData: [parseInt(componentID)] });
   } else if (data.title === 'Test Results') {
     delay = 6000; 
