@@ -10,3 +10,6 @@ practice system test
 [List of SRM](http://community.topcoder.com/tc?module=MatchList) -- Use SRMs 600-615
 
 SRM 600 DIV 1 - ORSolitaire --- roundID:15831, practiceRoomID:319722, componentID:36616
+
+
+http://community.topcoder.com/stat?c=problem_solution&rm=321482&rd=15849&pm=13125&cr=23039471
