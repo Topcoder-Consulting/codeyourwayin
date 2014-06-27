@@ -50,7 +50,7 @@ function testProblem() {
 
 function submit() {
   socket.emit('PracticeSystemTestRequest', { roomID: roomID, componentIds: [componentID] });
-  //socket.emit('SubmitRequest', { componentID: componentID });
+  $("#testresults").find('tr').slice(1).remove();
 }
 
 socket.on('connect', function() {
@@ -65,7 +65,9 @@ socket.on('PracticeSystemTestResponse', function(data) {
 
 socket.on('PracticeSystemTestResultResponse', function(data) {
   console.log('====== PracticeSystemTestResultResponse')
-  console.log(data)
+  var html = '<tr><td>'+data.resultData.succeeded+'</td><td>'+data.resultData.expectedValue+'</td><td>'+data.resultData.returnValue+'</td><td>'+S(data.resultData.args).replaceAll(',', ', ').s;+'</td></tr>';
+  $('#testresults tr').first().after(html);
+  console.log();
 });  
 
 

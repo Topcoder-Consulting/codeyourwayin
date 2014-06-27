@@ -1,9 +1,10 @@
 # Code Your Way In
 
 login
-enter the practice room
-open the component
+enter the practice room  - SRM 616 DIV 2 -- room 321513 (listen for RoomInfoResponse)
+open the component - 39763
 compile the code
+submit
 practice system test
 
 [List of SRM](http://community.topcoder.com/tc?module=MatchList) -- Use SRMs 600-615
