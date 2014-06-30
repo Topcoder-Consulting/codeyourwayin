@@ -15,12 +15,8 @@ $(function(){
 });  
 
 function login() {
-  var username = 'jeffdonthemic';
-  var password = 'mypass';
   console.log('Logging into arena...');
-  //socket.emit('LoginRequest', {username: username, password: password});
-  // grab the tcsso cookie from the topcoder.com domain
-  socket.emit('LoginRequest', {sso: $.cookie('tcsso')});
+  socket.emit('SSOLoginRequest', {sso: $.cookie('tcsso')});
   growl('info', 'Logging you into the arena.');
 }
 
