@@ -1,4 +1,10 @@
 var editor;
+var socket =  io.connect('https://arenaws.topcoder.com');
+var roomID  = $('#roomId').val();
+var componentID  = $('#componentId').val();
+var roundID = 15941;  // 13674  - srm 616
+var isPracticeRoomOpen = false;
+var allSystemTestsPass = true;
 
 $(function(){
   editor = ace.edit('editor');
@@ -8,22 +14,13 @@ $(function(){
   $('#testResultsPanel').hide();
 });  
 
-var socket =  io.connect('https://arenaws.topcoder.com');
-
-//var roomID = 321513; // 13125
-//var componentID = 39763; // 39286;  // 39763
-
-var roomID  = $('#roomId').val();
-var componentID  = $('#componentId').val();
-var roundID = 15941;  // 13674  - srm 616
-var isPracticeRoomOpen = false;
-var allSystemTestsPass = true;
-
 function login() {
   var username = 'jeffdonthemic';
-  var password = 'FMGY9s9VoR';
+  var password = 'mypass';
   console.log('Logging into arena...');
-  socket.emit('LoginRequest', {username: username, password: password});
+  //socket.emit('LoginRequest', {username: username, password: password});
+  // grab the tcsso cookie from the topcoder.com domain
+  socket.emit('LoginRequest', {sso: $.cookie('tcsso')});
   growl('info', 'Logging you into the arena.');
 }
 
