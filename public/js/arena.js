@@ -2,7 +2,7 @@ var editor;
 var socket =  io.connect('https://arenaws.topcoder.com');
 var roomID  = $('#roomId').val();
 var componentID  = $('#componentId').val();
-var roundID = 15941;  // 13674  - srm 616
+var roundID = parseInt($('#roundId').val());
 var isPracticeRoomOpen = false;
 var allSystemTestsPass = true;
 

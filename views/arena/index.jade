@@ -6,6 +6,7 @@ block content
   form#hidden(action='/arena/success', method='post')
     input(type='hidden', name='_csrf', value=_csrf)
     input#seed(type='hidden',  name="seed" value='#{seed}')
+    input#roundId(type='hidden', name="roundId" value='#{roundId}')
     input#roomId(type='hidden', name="roomId" value='#{roomId}')
     input#componentId(type='hidden', name="componentId" value='#{componentId}')
 
