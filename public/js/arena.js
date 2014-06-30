@@ -5,6 +5,7 @@ var componentID  = $('#componentId').val();
 var roundID = parseInt($('#roundId').val());
 var isPracticeRoomOpen = false;
 var allSystemTestsPass = true;
+var json;
 
 $(function(){
   editor = ace.edit('editor');
@@ -100,7 +101,7 @@ socket.on('GetProblemResponse', function (data) {
   console.log(data);
   var problem = data.problem.primaryComponent;
   $('#title').text(data.problem.name);
-  $('#instruction').text(S(problem.intro.text).replaceAll('null', '').s);
+  $('#instruction').html(parseIntro(problem.intro));
   var paramTypes = _.pluck(problem.allParamTypes[0], 'description');
   var paramNames = _.pluck(problem.allParamNames[0]);
 
@@ -165,6 +166,38 @@ socket.on('PopUpGenericResponse', function (data) {
   if (showModal) growl(type, data.message, delay);
 
 });
+
+function parseIntro(obj) {
+  var intro = '';
+  for (j=0;j<obj.children.length;j++) {
+    if (obj.children[j].children) {
+      for (i=0;i<obj.children[j].children.length;i++) {
+        var child = obj.children[j].children[i];
+        if (child.editableText) {
+          intro += child.editableText;
+        } else if (child.description) {
+          intro += child.description;
+        } else {
+          intro += child.text;
+        }
+      }
+    } else {
+      if (obj.children[j].editableText) {
+        intro += obj.children[j].editableText;
+      } else if (obj.children[j].description) {
+        intro += obj.children[j].description;
+      } else {
+        intro += obj.children[j].text;
+      }
+    }
+  }
+
+  intro = S(intro.trim()).replaceAll('\n\n\n\n', '<br><br>').s
+  intro = S(intro.trim()).replaceAll('\n\n', '<br><br>').s
+  intro = S(intro).replaceAll('\n', ' ').s
+  return intro;
+
+}
 
 function changeLanguage() {
   var mode = 'java';
