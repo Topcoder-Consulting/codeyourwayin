@@ -5,7 +5,6 @@ var componentID  = $('#componentId').val();
 var roundID = parseInt($('#roundId').val());
 var isPracticeRoomOpen = false;
 var allSystemTestsPass = true;
-var json;
 
 $(function(){
   editor = ace.edit('editor');
@@ -23,7 +22,9 @@ function login() {
 
 function compile() {
   socket.emit('CompileRequest', { 
-    componentID: componentID, language: $('#language').val(), code: editor.getValue() 
+    componentID: componentID, 
+    language: $('#language').val(), 
+    code: editor.getValue() 
   });
 }  
 
@@ -48,6 +49,7 @@ function submit() {
   $('#testResultsPanel').show();
   $("#testresults").find('tr').slice(1).remove();
   allSystemTestsPass = true;
+  // wait 3 seconds so all tests return and check for success
   setTimeout(function(){
     if (allSystemTestsPass === true) {
       $('#successBtn').show();
@@ -60,13 +62,7 @@ socket.on('connect', function() {
   login();
 });  
 
-socket.on('PracticeSystemTestResponse', function(data) {
-  console.log('====== PracticeSystemTestResponse')
-  console.log(data)
-});  
-
 socket.on('PracticeSystemTestResultResponse', function(data) {
-  console.log('====== PracticeSystemTestResultResponse')
   var indicator = 'success';
   if (data.resultData.succeeded === false) indicator = 'danger';
   var html = '<tr class='+indicator+'><td>'+data.resultData.succeeded+'</td><td>'+data.resultData.expectedValue+'</td><td>'+data.resultData.returnValue+'</td><td>'+S(data.resultData.args).replaceAll(',', ', ').s;+'</td></tr>';
@@ -126,18 +122,27 @@ socket.on('GetProblemResponse', function (data) {
   }
   $('#constraints').html(constraints);
 
+  // examples
+  var examples = '<b>Examples</b>';
+  for (i = 0; i<problem.testCases.length;i++) {
+    examples += '<br/>Example #' + (i+1);
+    for (j = 0; j<problem.testCases[i].input.length;j++) {
+      examples += '<br/>&nbsp;&nbsp;' + problem.testCases[i].input[j];  
+    }
+    examples += '<br/>Returns: ' + problem.testCases[i].output + '<br/>'; 
+  }
+  $('#examples').html(examples);  
+
 });  
 
 // response from submitting solution
 socket.on('SubmitResultsResponse', function (data) {
-  console.log('Received SubmitResultsResponse: ');
-  console.log(data);
   if (!S(data.message).contains('successful')) {
     growl('danger', data.message, 5000);
   }
 });
 
-// after compiling chode
+// responses coming back from various operations
 socket.on('PopUpGenericResponse', function (data) {
 
   var type = 'info';
@@ -149,7 +154,6 @@ socket.on('PopUpGenericResponse', function (data) {
   } else if (S(data.message).contains('code compiled successfully')) {
     // always submit when code successfully compiles
     socket.emit('SubmitRequest', { componentID: componentID });
-    console.log("Submitting code for " + componentID);
     type = 'success'
   } else if (S(data.message).contains('error')) {
     type = 'danger';
