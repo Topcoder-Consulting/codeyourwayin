@@ -71,7 +71,7 @@ var updateUser = function(user, code) {
 // finds an available discount code and reserves it
 var getDiscountCode = function() {
   var deferred = Q.defer(); 
-  DiscountCode.findOneAndUpdate({available: true}, { $set: {available: false }}, function(err, record) {
+  DiscountCode.findOneAndUpdate({available: 1}, { $set: {available: 0 }}, function(err, record) {
     if (err) deferred.resolve('NO_CODES_AVAILABLE'); 
     if (!err) deferred.resolve(record.code); 
   }); 
