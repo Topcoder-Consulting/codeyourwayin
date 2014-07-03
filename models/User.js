@@ -13,7 +13,7 @@ var userSchema = new mongoose.Schema({
   instagram: String,
   linkedin: String,
   tokens: Array,
-  goldenTicket: Number,
+  goldenTicket: String,
 
   profile: {
     name: { type: String, default: '' },
