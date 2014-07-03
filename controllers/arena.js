@@ -1,6 +1,7 @@
 var Q = require("q");
 var User = require('../models/User');
 var Problem = require('../models/Problem');
+var DiscountCode = require('../models/DiscountCode');
 
 /**
  * GET /
@@ -36,7 +37,7 @@ exports.success = function(req, res) {
 
   if (typeof req.user.goldenTicket === 'undefined') {
 
-    nextRegistrationCode()
+    getDiscountCode()
       .then(function(code) {
         updateUser(req.user, code)
           .then(function(code) {
@@ -67,15 +68,12 @@ var updateUser = function(user, code) {
   return deferred.promise;  
 }
 
-// find the highest number registration code and returns one greater. If not found, returns 1000.
-var nextRegistrationCode = function() {
+// finds an available discount code and reserves it
+var getDiscountCode = function() {
   var deferred = Q.defer(); 
-  User.find({}).sort({goldenTicket: 'descending'}).limit(1).exec(function(err, items) {
-    if (!items[0].goldenTicket) {
-      deferred.resolve(1000); 
-    } else {
-      deferred.resolve(items[0].goldenTicket + 1);
-    }
+  DiscountCode.findOneAndUpdate({available: true}, { $set: {available: false }}, function(err, record) {
+    if (err) deferred.resolve('NO_CODES_AVAILABLE'); 
+    if (!err) deferred.resolve(record.code); 
   }); 
   return deferred.promise;  
 }
