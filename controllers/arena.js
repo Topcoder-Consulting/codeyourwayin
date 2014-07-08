@@ -2,6 +2,7 @@ var Q = require("q");
 var User = require('../models/User');
 var Problem = require('../models/Problem');
 var DiscountCode = require('../models/DiscountCode');
+var verification = require("../lib/verification.js");
 
 /**
  * GET /
@@ -21,8 +22,7 @@ exports.index = function(req, res) {
           loadArena: true,
           roundId: problem[0].roundId,
           roomId: problem[0].roomId,
-          componentId: problem[0].componentId,
-          seed: req.user._id
+          componentId: problem[0].componentId
         });
 
       });
@@ -37,15 +37,18 @@ exports.success = function(req, res) {
 
   if (typeof req.user.goldenTicket === 'undefined') {
 
-    getDiscountCode()
-      .then(function(code) {
-        updateUser(req.user, code)
+    verification.checkCode(req.cookies.tcsso, req.body.roomId, req.body.componentId)
+      .then(function(result) {
+        getDiscountCode()
           .then(function(code) {
-            res.render('arena/success', {
-              title: 'Success',
-              goldenTicket: code
-            });
-          }) ;
+            updateUser(req.user, code)
+              .then(function(code) {
+                res.render('arena/success', {
+                  title: 'Success',
+                  goldenTicket: code
+                })
+              })
+          })
       })
       .fail(function(err) {
         // TODO -- add 500 page
@@ -60,7 +63,6 @@ exports.success = function(req, res) {
 };
 
 var updateUser = function(user, code) {
-  console.log(code);
   var deferred = Q.defer();  
   User.findByIdAndUpdate(user._id, { $set: { goldenTicket: code }}, function(err, doc){
     deferred.resolve(code);
