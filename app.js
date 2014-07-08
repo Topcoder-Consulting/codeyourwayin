@@ -191,6 +191,7 @@ app.post('/account/delete', passportConf.isAuthenticated, userController.postDel
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 app.get('/arena', passportConf.isAuthenticated, arenaController.index);
 app.post('/arena/success', passportConf.isAuthenticated, arenaController.success);
+app.get('/test', arenaController.test);
 
 /**
  * OAuth sign-in routes.

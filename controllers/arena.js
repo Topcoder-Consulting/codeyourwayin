@@ -4,6 +4,15 @@ var Problem = require('../models/Problem');
 var DiscountCode = require('../models/DiscountCode');
 var verification = require("../lib/verification.js");
 
+exports.test = function(req, res) {
+
+  verification.test();
+
+  res.render('home', {
+    title: 'Home'
+  });
+};
+
 /**
  * GET /
  * Arena!!
