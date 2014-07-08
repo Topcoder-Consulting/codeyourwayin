@@ -1,9 +1,9 @@
 {
-  "name": "hackathon-starter",
-  "version": "2.2.1",
+  "name": "codeyourwayin",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/topcoderinc/codeyourwayin.git"
   },
   "scripts": {
     "start": "node app.js",
