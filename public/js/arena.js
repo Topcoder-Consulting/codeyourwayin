@@ -10,7 +10,7 @@ $(function(){
   editor = ace.edit('editor');
   editor.setTheme("ace/theme/monokai");
   editor.getSession().setMode('ace/mode/java');
-  $('#testResultsPanel').hide();
+  $('#testResultsPanel').hide(); 
 });  
 
 function login() {
