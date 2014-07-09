@@ -44,8 +44,10 @@ exports.index = function(req, res) {
 
 exports.success = function(req, res) {
 
+  console.log('User submitted code.');
   if (typeof req.user.goldenTicket === 'undefined') {
 
+    console.log('Preparing to start verification process....');
     verification.checkCode(req.cookies.tcsso, req.body.roomId, req.body.componentId)
       .then(function(result) {
         getDiscountCode()
