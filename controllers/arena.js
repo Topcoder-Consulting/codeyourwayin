@@ -6,7 +6,7 @@ var verification = require("../lib/verification.js");
 
 exports.test = function(req, res) {
 
-  verification.test();
+  verification.checkCode(req.cookies.tcsso, req.query.roomId, req.query.componentId);
 
   res.render('home', {
     title: 'Home'

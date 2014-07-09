@@ -10,7 +10,6 @@ $(function(){
   editor = ace.edit('editor');
   editor.setTheme("ace/theme/monokai");
   editor.getSession().setMode('ace/mode/java');
-  $('#successBtn').hide();
   $('#testResultsPanel').hide();
 });  
 
@@ -49,12 +48,6 @@ function submit() {
   $('#testResultsPanel').show();
   $("#testresults").find('tr').slice(1).remove();
   allSystemTestsPass = true;
-  // wait 3 seconds so all tests return and check for success
-  setTimeout(function(){
-    if (allSystemTestsPass === true) {
-      $('#successBtn').show();
-    }
-  }, 3000);
 }
 
 socket.on('connect', function() {
@@ -76,7 +69,7 @@ socket.on('PracticeSystemTestResultResponse', function(data) {
 socket.on('CreateRoundListResponse', function (data) {
   if (!isPracticeRoomOpen) {
     isPracticeRoomOpen = true;
-    console.log('Entering practice room: ' + roomID);
+    console.log('Entering practice room ' + roomID);
     socket.emit('MoveRequest', { moveType: 4, roomID: roomID });
     socket.emit('EnterRequest', { roomID: -1 });      
   }
@@ -93,8 +86,6 @@ socket.on('CreateProblemsResponse', function (data) {
 socket.on('GetProblemResponse', function (data) {
   $('#loading').hide();
   $('#problem').fadeIn( "slow" )
-  console.log('Here is the problem!!');
-  console.log(data);
   var problem = data.problem.primaryComponent;
   $('#title').text(data.problem.name);
   $('#instruction').html(parseIntro(problem.intro));
