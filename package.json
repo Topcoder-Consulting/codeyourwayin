@@ -33,6 +33,7 @@
     "lodash": "^2.4.1",
     "lusca": "^1.0.0",
     "method-override": "^2.0.2",
+    "moment": "^2.7.0",
     "mongoose": "^3.8.12",
     "morgan": "^1.1.1",
     "node-linkedin": "^0.2.0",
@@ -47,11 +48,11 @@
     "passport-twitter": "^1.0.2",
     "q": "^1.0.1",
     "request": "^2.36.0",
+    "socket.io-client": "0.9.11",
     "twit": "^1.1.15",
     "uglify-js": "^2.4.14",
     "validator": "^3.13.0",
-    "yui": "^3.17.1",
-    "socket.io-client": "0.9.11"
+    "yui": "^3.17.1"
   },
   "devDependencies": {
     "blessed": "0.0.33",
