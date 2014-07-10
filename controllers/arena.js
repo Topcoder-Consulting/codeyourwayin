@@ -3,15 +3,7 @@ var User = require('../models/User');
 var Problem = require('../models/Problem');
 var DiscountCode = require('../models/DiscountCode');
 var verification = require("../lib/verification.js");
-
-exports.test = function(req, res) {
-
-  verification.checkCode(req.cookies.tcsso, req.query.roomId, req.query.componentId);
-
-  res.render('home', {
-    title: 'Home'
-  });
-};
+var moment = require("moment");
 
 /**
  * GET /
@@ -21,21 +13,21 @@ exports.test = function(req, res) {
 exports.index = function(req, res) {
   if (typeof req.user.goldenTicket === 'undefined') {
 
-    // choose a random problem and return it
-    Problem.count(function(err, ct) {
-      var r = Math.floor(Math.random() * ct);
-      Problem.find({ event: 'tco14' }).limit(1).skip(r).exec(function(err, problem) {
-
+    getProblem(req.user)
+      .then(function(problem) {
+        console.log(problem);
         res.render('arena/index', {
           title: 'Arena',
           loadArena: true,
-          roundId: problem[0].roundId,
-          roomId: problem[0].roomId,
-          componentId: problem[0].componentId
-        });
+          roundId: problem.roundId,
+          roomId: problem.roomId,
+          componentId: problem.componentId
+        });      
+      })
+      .fail(function(err) {
+        console.log(err)
+      });        
 
-      });
-    }); 
   } else {
     req.flash('info', { msg: "You've already coded your way into TCO14. Your code is below." });
     res.redirect('/account');
@@ -73,6 +65,15 @@ exports.success = function(req, res) {
 
 };
 
+exports.test = function(req, res) {
+
+  verification.checkCode(req.cookies.tcsso, req.query.roomId, req.query.componentId);
+
+  res.render('home', {
+    title: 'Home'
+  });
+};
+
 var updateUser = function(user, code) {
   var deferred = Q.defer();  
   User.findByIdAndUpdate(user._id, { $set: { goldenTicket: code }}, function(err, doc){
@@ -88,5 +89,43 @@ var getDiscountCode = function() {
     if (err) deferred.resolve('NO_CODES_AVAILABLE'); 
     if (!err) deferred.resolve(record.code); 
   }); 
+  return deferred.promise;  
+}
+
+var getProblem = function(user) {
+
+  var deferred = Q.defer(); 
+  var fetchNewProblem = true;
+
+  // add a day to the last time they got a new problem
+  var expiresAt = moment(user.lastNewProblemDate).add(process.env.DATE_EXPIRE_UNIT, parseInt(process.env.DATE_EXPIRE_AMOUNT));
+  // if the time has not expired, return their last problem
+  if (moment().diff(expiresAt, 'minutes') < 0) fetchNewProblem = false;
+  // if this is their first time getting a problem
+  if (typeof user.lastNewProblemDate === 'undefined') fetchNewProblem = true;
+
+  if (fetchNewProblem) {
+    console.log('Fetching new problem....');
+    // choose a random problem and return it
+    Problem.count(function(err, ct) {
+      var r = Math.floor(Math.random() * ct);
+      Problem.find({ event: 'tco14' }).limit(1).skip(r).exec(function(err, problem) {
+
+        // update their user with the new problem
+        User.findById(user.id, function (err, user){
+          user.lastNewProblemDate =Date();
+          user.problems.push(problem[0]);
+          user.save();
+        });      
+        // return this problem
+        deferred.resolve(problem[0]); 
+      });
+    });    
+
+  } else {
+    // return their last problem
+    deferred.resolve(user.problems[user.problems.length-1]);     
+  }
+
   return deferred.promise;  
 }

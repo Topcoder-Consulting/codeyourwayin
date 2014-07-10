@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
+var ProblemSchema = require('../models/Problem').Schema;
 
 var userSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true },
@@ -14,6 +15,8 @@ var userSchema = new mongoose.Schema({
   linkedin: String,
   tokens: Array,
   goldenTicket: String,
+  problems: [ProblemSchema],
+  lastNewProblemDate: Date,
 
   profile: {
     name: { type: String, default: '' },
