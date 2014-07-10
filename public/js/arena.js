@@ -4,7 +4,6 @@ var roomID  = $('#roomId').val();
 var componentID  = $('#componentId').val();
 var roundID = parseInt($('#roundId').val());
 var isPracticeRoomOpen = false;
-var allSystemTestsPass = true;
 
 $(function(){
   editor = ace.edit('editor');
@@ -47,7 +46,6 @@ function submit() {
   socket.emit('PracticeSystemTestRequest', { roomID: roomID, componentIds: [componentID] });
   $('#testResultsPanel').show();
   $("#testresults").find('tr').slice(1).remove();
-  allSystemTestsPass = true;
 }
 
 socket.on('connect', function() {
@@ -60,8 +58,6 @@ socket.on('PracticeSystemTestResultResponse', function(data) {
   if (data.resultData.succeeded === false) indicator = 'danger';
   var html = '<tr class='+indicator+'><td>'+data.resultData.succeeded+'</td><td>'+data.resultData.expectedValue+'</td><td>'+data.resultData.returnValue+'</td><td>'+S(data.resultData.args).replaceAll(',', ', ').s;+'</td></tr>';
   $('#testresults tr').first().after(html);
-  // set indicator that a least one test failed
-  if (data.resultData.succeeded === false) allSystemTestsPass = false;
 });  
 
 
