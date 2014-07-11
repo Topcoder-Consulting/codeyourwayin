@@ -110,10 +110,9 @@ var getProblem = function(user) {
   if (fetchNewProblem) {
     console.log('Fetching new problem....');
     // choose a random problem and return it
-    Problem.count(function(err, ct) {
+    Problem.count({ event: 'tco14' }, function(err, ct) {
       var r = Math.floor(Math.random() * ct);
       Problem.find({ event: 'tco14' }).limit(1).skip(r).exec(function(err, problem) {
-
         // update their user with the new problem
         User.findById(user.id, function (err, user){
           user.lastNewProblemDate =Date();
