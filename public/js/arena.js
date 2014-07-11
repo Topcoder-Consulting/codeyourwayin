@@ -87,7 +87,6 @@ socket.on('GetProblemResponse', function (data) {
   $('#loading').hide();
   $('#problem').fadeIn( "slow" )
   var problem = data.problem.primaryComponent;
-  $('#title').text(data.problem.name);
   $('#instruction').html(parseIntro(problem.intro));
   var paramTypes = _.pluck(problem.allParamTypes[0], 'description');
   var paramNames = _.pluck(problem.allParamNames[0]);
