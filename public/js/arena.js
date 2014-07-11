@@ -3,7 +3,6 @@ var socket =  io.connect('https://arenaws.topcoder.com');
 var roomID  = $('#roomId').val();
 var componentID  = $('#componentId').val();
 var roundID = parseInt($('#roundId').val());
-var isPracticeRoomOpen = false;
 
 $(function(){
   editor = ace.edit('editor');
@@ -60,24 +59,26 @@ socket.on('PracticeSystemTestResultResponse', function(data) {
   $('#testresults tr').first().after(html);
 });  
 
-
 // after logging in
-socket.on('CreateRoundListResponse', function (data) {
-  if (!isPracticeRoomOpen) {
-    isPracticeRoomOpen = true;
-    console.log('Entering practice room ' + roomID);
-    socket.emit('MoveRequest', { moveType: 4, roomID: roomID });
-    socket.emit('EnterRequest', { roomID: -1 });      
-  }
-});  
+socket.on('UserInfoResponse', function(data) {
+  console.log('Logged in as: ' + data.userInfo.handle);
+  console.log('Moving to practice room: ' + roomID);
+  socket.emit('MoveRequest', { moveType: 4, roomID: roomID });
+  socket.emit('EnterRequest', { roomID: -1 });    
+});
 
 // after moving to a room, open a problem
-socket.on('CreateProblemsResponse', function (data) {
-  if (data.roundID === roundID) {
-    socket.emit('OpenComponentForCodingRequest', { componentID: componentID }); 
-    growl('info', 'Loading a random problem.');
-  }
-});  
+socket.on('RoomInfoResponse', function(data) {
+  growl('info', 'Loading problem....');
+  console.log('Successfully entered practice room: ' + data.name + ' (' + data.roomID + ')');
+  console.log('Opening component '+componentID+'...');
+  socket.emit('OpenComponentForCodingRequest', { componentID: componentID }); 
+});
+
+// get their code and put it int the editor
+socket.on('OpenComponentResponse', function(data) {
+  if (data.code) editor.getSession().setValue(data.code);
+});
 
 socket.on('GetProblemResponse', function (data) {
   $('#loading').hide();

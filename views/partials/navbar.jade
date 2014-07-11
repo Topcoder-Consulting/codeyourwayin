@@ -6,17 +6,19 @@
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href='/') Code Your Way In
+      a.navbar-brand(href='/')
     .collapse.navbar-collapse
       ul.nav.navbar-nav
-        li(class=title=='Home'?'active':undefined)
-          a(href='/') Home
-        li(class=title=='Arena'?'active':undefined)
-          a(href='/arena') Arena
+        li(class=title=='How It Works'?'active':undefined)
+          a(href='/') How It Works
+        li(class=title=='Solve the Problem'?'active':undefined)
+          a(href='/arena') Solve the Problem
+        li(class=title=='Get Your Golden Ticket'?'active':undefined)
+          a(href='/arena/results') Get Your Golden Ticket
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)
-            a(href='https://www.topcoder.com/?action=showlogin') Login
+            a(href='/login') Login
           li(class=title=='Create Account'?'active':undefined)
             a(href='https://www.topcoder.com/?action=callback') Create Account
         else

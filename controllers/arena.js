@@ -15,7 +15,6 @@ exports.index = function(req, res) {
 
     getProblem(req.user)
       .then(function(problem) {
-        console.log(problem);
         res.render('arena/index', {
           title: 'Arena',
           loadArena: true,
@@ -54,15 +53,23 @@ exports.success = function(req, res) {
           })
       })
       .fail(function(err) {
-        // TODO -- add 500 page
-        console.log(err)
+        console.log('Error running all system tests: '+err);
+        req.flash('errors', { msg: err.toString() });
+        res.redirect('/arena');
       });
 
   } else {
     req.flash('info', { msg: "You've already coded your way into TCO14. Your code is below." });
-    res.redirect('/account');
+    res.redirect('/arena/results');
   }        
 
+};
+
+exports.results = function(req, res) {
+
+  res.render('arena/results', {
+    title: 'Results'
+  });
 };
 
 exports.test = function(req, res) {
