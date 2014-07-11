@@ -3,7 +3,7 @@ extends ../layout
 block content
   h2 Welcome to the Arena
 
-  form#hidden(action='/arena/success', method='post')
+  form#hidden(action='/arena/submit', method='post')
     input(type='hidden', name='_csrf', value=_csrf)
     input#roundId(type='hidden', name="roundId" value='#{roundId}')
     input#roomId(type='hidden', name="roomId" value='#{roomId}')
@@ -55,11 +55,11 @@ block content
 
     blockquote
       p
-      | When your code is complete and you are satisified with its functionality, submit it to run our system tests and determine whether it passes. You can submit your code as many times as you deem necessary. The test results will display in the table below.
+      | When your code is complete and you are satisified with its functionality, run the system tests to determine whether it passes. You can run the system tests as many times as you deem necessary. The test results will display in the table below. When all tests pass, submit your code to receive your 'golden ticket' to TCO14.
 
     button.btn.btn-primary#submitBtn(type='button', onclick='submit()') Run System Tests 
     | &nbsp;
-    button.btn.btn-success#successBtn(type='button', onclick='success()') Finished? Submit your code! 
+    button.btn.btn-success#submitCodeBtn(type='button', onclick='submitCode()') Finished? Submit your code! 
 
     #testResultsPanel
 

@@ -14,7 +14,7 @@ $(function(){
 function login() {
   console.log('Logging into arena...');
   socket.emit('SSOLoginRequest', {sso: $.cookie('tcsso')});
-  growl('info', 'Logging you into the arena.');
+  growl('info', 'Logging you into the arena...');
 }
 
 function compile() {
@@ -25,8 +25,10 @@ function compile() {
   });
 }  
 
-function success() {
+function submitCode() {
   $('#hidden').submit();
+  $('#submitCodeBtn').prop('disabled', true);;
+  growl('info', 'Running System Tests. Please be patient...');
 }  
 
 // practiceSystemTestProblem
@@ -61,6 +63,7 @@ socket.on('PracticeSystemTestResultResponse', function(data) {
 
 // after logging in
 socket.on('UserInfoResponse', function(data) {
+  growl('info', data.userInfo.handle + ' logged in!');
   console.log('Logged in as: ' + data.userInfo.handle);
   console.log('Moving to practice room: ' + roomID);
   socket.emit('MoveRequest', { moveType: 4, roomID: roomID });

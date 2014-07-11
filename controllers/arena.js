@@ -29,26 +29,22 @@ exports.index = function(req, res) {
 
   } else {
     req.flash('info', { msg: "You've already coded your way into TCO14. Your code is below." });
-    res.redirect('/account');
+    res.redirect('/arena/results');
   }
 };
 
-exports.success = function(req, res) {
+exports.submit = function(req, res) {
 
-  console.log('User submitted code.');
+  console.log(req.user.profile.name + ' submitted code.');
   if (typeof req.user.goldenTicket === 'undefined') {
 
-    console.log('Preparing to start verification process....');
     verification.checkCode(req.cookies.tcsso, req.body.roomId, req.body.componentId)
       .then(function(result) {
         getDiscountCode()
           .then(function(code) {
             updateUser(req.user, code)
               .then(function(code) {
-                res.render('arena/success', {
-                  title: 'Success',
-                  goldenTicket: code
-                })
+                res.redirect('/arena/results');
               })
           })
       })
