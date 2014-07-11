@@ -71,7 +71,14 @@
 		socket.on('CreateProblemsResponse', function (data) {
 			// this is what is returned when you enter a room. it's the list of components
 			console.log('Returning CreateProblemsResponse...')
-			console.log(data);
+			console.log(data.problems);
+			for (i=0;i<data.problems.length;i++) {
+				
+					console.log(data.problems[i].name);
+					console.log(data.problems[i].primaryComponent.componentID);
+					console.log("points: " + data.problems[i].primaryComponent.pointValue);
+				
+			}
 			output('<span class="normal-msg">Received CreateProblemsResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
 		});
 		socket.on('CreateRoomListResponse', function (data) {
@@ -173,6 +180,7 @@
 			output('<span class="normal-msg">Received RegisteredUsersResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
 		});
 		socket.on('RoomInfoResponse', function (data) {
+			console.log("RoomID="+data.roomID);
 			output('<span class="normal-msg">Received RoomInfoResponse:</span> <br/>' + JSON.stringify(data).replace(/\n/g, '<br/>'));
 		});
 		socket.on('RoundProblemsResponse', function (data) {
