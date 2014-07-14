@@ -50,7 +50,7 @@ function showWaiting() {
       growl('info', 'Still loading. Please wait...');
       showWaiting();
     }
-  }, 30000);   
+  }, 15000);   
 }
 
 function submit() {
@@ -75,7 +75,7 @@ socket.on('PracticeSystemTestResultResponse', function(data) {
 socket.on('UserInfoResponse', function(data) {
   growl('info', data.userInfo.handle + ' logged in!');
   console.log('Logged in as: ' + data.userInfo.handle);
-  console.log('Moving to practice room: ' + roomID);
+  // console.log('Moving to practice room: ' + roomID);
   socket.emit('MoveRequest', { moveType: 4, roomID: roomID });
   socket.emit('EnterRequest', { roomID: -1 });    
   showWaiting();
@@ -84,8 +84,8 @@ socket.on('UserInfoResponse', function(data) {
 // after moving to a room, open a problem
 socket.on('RoomInfoResponse', function(data) {
   growl('info', 'Loading problem....');
-  console.log('Successfully entered practice room: ' + data.name + ' (' + data.roomID + ')');
-  console.log('Opening component '+componentID+'...');
+  // console.log('Successfully entered practice room: ' + data.name + ' (' + data.roomID + ')');
+  // console.log('Opening component '+componentID+'...');
   socket.emit('OpenComponentForCodingRequest', { componentID: componentID }); 
 });
 
