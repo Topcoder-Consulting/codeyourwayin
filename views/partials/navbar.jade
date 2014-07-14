@@ -13,8 +13,8 @@
           a(href='/') How It Works
         li(class=title=='Solve the Problem'?'active':undefined)
           a(href='/arena') Solve the Problem
-        li(class=title=='Get Your Golden Ticket'?'active':undefined)
-          a(href='/arena/results') Get Your Golden Ticket
+        li(class=title=='Get Your Ticket'?'active':undefined)
+          a(href='/arena/results') Get Your Ticket
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)
@@ -32,5 +32,3 @@
               i.caret
             ul.dropdown-menu
               li: a(href='/account') My Account
-              li.divider
-              li: a(href='/logout') Logout
