@@ -3,6 +3,7 @@ var socket =  io.connect('https://arenaws.topcoder.com');
 var roomID  = $('#roomId').val();
 var componentID  = $('#componentId').val();
 var roundID = parseInt($('#roundId').val());
+var componentLoaded = false;
 
 $(function(){
   editor = ace.edit('editor');
@@ -43,6 +44,15 @@ function testProblem() {
     socket.emit('TestRequest', { args: args, componentID: componentID });    
 }
 
+function showWaiting() {
+  setTimeout(function(){
+    if (!componentLoaded) {
+      growl('info', 'Still loading. Please wait...');
+      showWaiting();
+    }
+  }, 30000);   
+}
+
 function submit() {
   socket.emit('PracticeSystemTestRequest', { roomID: roomID, componentIds: [componentID] });
   $('#testResultsPanel').show();
@@ -68,6 +78,7 @@ socket.on('UserInfoResponse', function(data) {
   console.log('Moving to practice room: ' + roomID);
   socket.emit('MoveRequest', { moveType: 4, roomID: roomID });
   socket.emit('EnterRequest', { roomID: -1 });    
+  showWaiting();
 });
 
 // after moving to a room, open a problem
@@ -87,6 +98,8 @@ socket.on('GetProblemResponse', function (data) {
   $('#loading').hide();
   $('#problem').fadeIn( "slow" )
   var problem = data.problem.primaryComponent;
+  // set the flag so the modal doesn't show again.
+  componentLoaded = true;
   $('#instruction').html(parseIntro(problem.intro));
   var paramTypes = _.pluck(problem.allParamTypes[0], 'description');
   var paramNames = _.pluck(problem.allParamNames[0]);
