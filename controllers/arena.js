@@ -38,7 +38,7 @@ exports.submit = function(req, res) {
   console.log(req.user.profile.name + ' submitted code.');
   if (typeof req.user.goldenTicket === 'undefined') {
 
-    verification.checkCode(req.cookies.tcsso, req.body.roomId, req.body.componentId)
+    verification.checkCode(req.cookies.tcsso, req.body.roomId, req.body.componentId, req.user)
       .then(function(result) {
         getDiscountCode()
           .then(function(code) {
