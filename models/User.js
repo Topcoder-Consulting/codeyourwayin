@@ -17,6 +17,7 @@ var userSchema = new mongoose.Schema({
   goldenTicket: String,
   problems: [ProblemSchema],
   lastNewProblemDate: Date,
+  verificationStatus: String,
 
   profile: {
     name: { type: String, default: '' },

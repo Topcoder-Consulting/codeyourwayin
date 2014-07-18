@@ -4,6 +4,7 @@ var Problem = require('../models/Problem');
 var DiscountCode = require('../models/DiscountCode');
 var verification = require("../lib/verification.js");
 var moment = require("moment");
+var childProcess = require("child_process");
 
 /**
  * GET /
@@ -12,6 +13,10 @@ var moment = require("moment");
 
 exports.index = function(req, res) {
   if (typeof req.user.goldenTicket === 'undefined') {
+
+    if (req.query.failure) {
+      req.flash('errors', { msg: 'At least one of your tests failed. Please check your code and run system tests again before submitting your code.'});      
+    }
 
     getProblem(req.user)
       .then(function(problem) {
@@ -35,24 +40,56 @@ exports.index = function(req, res) {
 
 exports.submit = function(req, res) {
 
-  console.log(req.user.profile.name + ' submitted code.');
   if (typeof req.user.goldenTicket === 'undefined') {
 
-    verification.checkCode(req.cookies.tcsso, req.body.roomId, req.body.componentId, req.user)
-      .then(function(result) {
-        getDiscountCode()
-          .then(function(code) {
-            updateUser(req.user, code)
-              .then(function(code) {
-                res.redirect('/arena/results');
-              })
-          })
-      })
-      .fail(function(err) {
-        console.log('Error running all system tests: '+err);
-        req.flash('errors', { msg: err.toString() });
-        res.redirect('/arena');
-      });
+    data = { 
+      sso: req.cookies.tcsso,
+      roomID: req.body.roomId,
+      componentID: req.body.componentId,
+      user: req.user
+    }    
+
+    // kick off the worker process
+    var worker = childProcess.fork("./workers/verify.js");  
+    worker.send(data);   
+
+    // set the status of the code check process to queued
+    User.findByIdAndUpdate(req.user._id, { $set: { verificationStatus: 'Queued' }}, function(err, user){
+      if (err) console.log(err);
+    });    
+
+    worker.on('message', function(msg){
+
+      // if we get a boolean, they their code has either succeeded or failed
+      if (typeof msg === 'boolean') {
+        if (msg) {
+          getDiscountCode()
+            .then(function(code) {
+              updateUser(req.user, code)
+                .then(function(code) {
+                  console.log(code);
+                })
+            })
+          .fail(function(err) {
+            console.log('Error running all system tests: '+err);
+          });
+        } else {
+          console.log('it failed');
+        }
+
+      // updating the verificationStsatus
+      } else {
+        User.findByIdAndUpdate(req.user._id, { $set: { verificationStatus: msg }}, function(err, user){
+          if (err) console.log(err);
+        });          
+      }
+
+    });    
+
+    res.render('arena/submit', {
+      title: 'Results',
+      checkStatus: true,
+    });
 
   } else {
     req.flash('info', { msg: "You've already coded your way into TCO14. Your code is below." });
@@ -62,15 +99,61 @@ exports.submit = function(req, res) {
 };
 
 exports.results = function(req, res) {
-
   res.render('arena/results', {
     title: 'Results'
   });
 };
 
+// returns the verificationStatus of their code submissions
+exports.status = function(req, res) {
+  res.send(req.user.verificationStatus || 'Not Submitted');
+};
+
 exports.test = function(req, res) {
 
-  verification.checkCode(req.cookies.tcsso, req.query.roomId, req.query.componentId);
+  // ORSolitaireDiv2
+  data = { 
+    sso: req.cookies.tcsso,
+    roomID: 319723,
+    componentID: 36617,
+    user: req.user
+  }
+
+  var worker = childProcess.fork("./workers/verify.js");  
+  worker.send(data);   
+
+  // set the status of the code check process
+  User.findByIdAndUpdate(req.user._id, { $set: { verificationStatus: 'Queued' }}, function(err, user){
+    console.log(user)
+  });    
+
+  worker.on('message', function(msg){
+
+    // check the success as it's a boolean
+    if (typeof msg === 'boolean') {
+      if (msg) {
+        getDiscountCode()
+          .then(function(code) {
+            updateUser(req.user, code)
+              .then(function(code) {
+                console.log(code);
+              })
+          })
+        .fail(function(err) {
+          console.log('Error running all system tests: '+err);
+        });
+      } else {
+        console.log('it failed');
+      }
+
+    // updating the verificationStsatus
+    } else {
+      User.findByIdAndUpdate(req.user._id, { $set: { verificationStatus: msg }}, function(err, user){
+        console.log(user)
+      });          
+    }
+
+  });  
 
   res.render('home', {
     title: 'Home'
