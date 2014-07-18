@@ -4,7 +4,6 @@
        type: 'GET',
        url: "/arena/status", 
        success: function(status) {
-         console.log(status);
          if (status === 'Passed') {
             window.location = "/arena/results";
          } else if (status === 'Failed') {

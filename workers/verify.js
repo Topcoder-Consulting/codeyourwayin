@@ -10,8 +10,6 @@ process.on('message',function(data){
   var roomID = data.roomID;
   var componentID = data.componentID;
 
-  console.log(user)
-
   var awaitingTestResults = false;
   var allSystemTestsPass = true;
 

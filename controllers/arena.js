@@ -73,8 +73,6 @@ exports.submit = function(req, res) {
           .fail(function(err) {
             console.log('Error running all system tests: '+err);
           });
-        } else {
-          console.log('it failed');
         }
 
       // updating the verificationStsatus
@@ -107,57 +105,6 @@ exports.results = function(req, res) {
 // returns the verificationStatus of their code submissions
 exports.status = function(req, res) {
   res.send(req.user.verificationStatus || 'Not Submitted');
-};
-
-exports.test = function(req, res) {
-
-  // ORSolitaireDiv2
-  data = { 
-    sso: req.cookies.tcsso,
-    roomID: 319723,
-    componentID: 36617,
-    user: req.user
-  }
-
-  var worker = childProcess.fork("./workers/verify.js");  
-  worker.send(data);   
-
-  // set the status of the code check process
-  User.findByIdAndUpdate(req.user._id, { $set: { verificationStatus: 'Queued' }}, function(err, user){
-    console.log(user)
-  });    
-
-  worker.on('message', function(msg){
-
-    // check the success as it's a boolean
-    if (typeof msg === 'boolean') {
-      if (msg) {
-        getDiscountCode()
-          .then(function(code) {
-            updateUser(req.user, code)
-              .then(function(code) {
-                console.log(code);
-              })
-          })
-        .fail(function(err) {
-          console.log('Error running all system tests: '+err);
-        });
-      } else {
-        console.log('it failed');
-      }
-
-    // updating the verificationStsatus
-    } else {
-      User.findByIdAndUpdate(req.user._id, { $set: { verificationStatus: msg }}, function(err, user){
-        console.log(user)
-      });          
-    }
-
-  });  
-
-  res.render('home', {
-    title: 'Home'
-  });
 };
 
 var updateUser = function(user, code) {
