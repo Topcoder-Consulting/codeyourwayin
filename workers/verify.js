@@ -69,7 +69,7 @@ process.on('message',function(data){
         }
       }, 3000);  
     }    
-    console.log(user.profile.name + '|' + 'Test result: ' + data.resultData.succeeded);
+    //console.log(user.profile.name + '|' + 'Test result: ' + data.resultData.succeeded);
     // set a flag if at least ONE test fails
     if (data.resultData.succeeded === false) allSystemTestsPass = false;
   });

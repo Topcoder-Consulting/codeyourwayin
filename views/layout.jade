@@ -9,6 +9,21 @@ html
     meta(name='author', content='')
     link(rel='shortcut icon', href='http://3a72mb4dqcfnkgfimp04jgyyd.wpengine.netdna-cdn.com/wp-content/themes/tcs-responsive/favicon.ico')
     title #{title} | Code Your Way In
+    if (useAdwords)
+      script(type='text/javascript').
+        /* <![CDATA[ */
+        var google_conversion_id = 1064594833;
+        var google_conversion_language = "en";
+        var google_conversion_format = "3";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "OrawCLubgwoQkdvR-wM";
+        var google_remarketing_only = false;
+        /* ]]> */        
+      script(type='text/javascript', src='//www.googleadservices.com/pagead/conversion.js')
+      noscript
+        div(style='display: inline;')
+          img(height='1', width='1', style='border-style: none;', alt='', src='//www.googleadservices.com/pagead/conversion/1064594833/?label=OrawCLubgwoQkdvR-wM&guid=ON&script=0')
+
     != css('styles')
   body
     include partials/navbar

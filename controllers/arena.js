@@ -97,8 +97,14 @@ exports.submit = function(req, res) {
 };
 
 exports.results = function(req, res) {
+
+  // only show the adwords code if they have suceeded
+  var useAdwords = false;
+  if (typeof req.user.goldenTicket != 'undefined') useAdwords = true
+
   res.render('arena/results', {
-    title: 'Results'
+    title: 'Results',
+    useAdwords: useAdwords
   });
 };
 
