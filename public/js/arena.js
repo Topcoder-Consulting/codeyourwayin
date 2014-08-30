@@ -101,6 +101,7 @@ socket.on('GetProblemResponse', function (data) {
   // set the flag so the modal doesn't show again.
   componentLoaded = true;
   $('#instruction').html(parseIntro(problem.intro));
+  $('#className').html(problem.className);
   var paramTypes = _.pluck(problem.allParamTypes[0], 'description');
   var paramNames = _.pluck(problem.allParamNames[0]);
 

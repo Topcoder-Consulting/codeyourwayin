@@ -1,73 +1,87 @@
 extends ../layout
 
 block content
-  h2 Solve this Problem!
-
   form#hidden(action='/arena/submit', method='post')
     input(type='hidden', name='_csrf', value=_csrf)
     input#roundId(type='hidden', name="roundId" value='#{roundId}')
     input#roomId(type='hidden', name="roomId" value='#{roomId}')
     input#componentId(type='hidden', name="componentId" value='#{componentId}')
 
-  p#loading.bg-success(style='margin: 25px; padding: 25px; width: 500px;') Building the arena. This may take a minute or two....
+  .member-area
+    .container
+      h1 Code Your Way In
+        br
+        strong Welcome to the Arena
+      a(href="http://community.topcoder.com/tco14/sponsor/sequoia-capital/").sponsor
+        span.sr-only sponsored by Sequoia Capital
 
-  #problem(style='display: none')
+      p#loading.bg-success(style='margin: 25px; padding: 25px; width: 500px;') Building the arena. This may take a minute or two....
 
-    #instruction(style='margin-top:15px;margin-bottom:15px')
 
-    #definition(style='padding-bottom:15px') 
+      #problem(style='display: none')
+        h2#className
 
-    #constraints(style='padding-bottom:25px') 
+        p#instruction
 
-    #examples(style='padding-bottom:25px') 
+        h3 Definition
+        p.indent#definition 
 
-    form(role='form')
-      .form-group
-        label(for='language') Your Development Language &nbsp;
-        select#language(onchange="changeLanguage();")
-          option(value='1', selected='true') Java
-          option(value='3') C++
-          option(value='4') C#
-          option(value='5') VB
-          option(value='6') Python
+        h3 Constraints
+        p.indent#constraints 
 
-      .form-group
-        #editor 
+        h3 Examples
+        p.indent#examples 
 
-      button.btn.btn-primary(type='button', onclick='compile()') Compile Your Code
-      | &nbsp;&nbsp; Make sure to compile your code after any changes before running tests.
+        form(role='form')
+          .form-group
+            h3 Coding Area
+            label(for='language') Select Your Development Language &nbsp;
+            select#language(onchange="changeLanguage();")
+              option(value='1', selected='true') Java
+              option(value='3') C++
+              option(value='4') C#
+              option(value='5') VB
+              option(value='6') Python
 
-    h3(style='padding-top:10px') Testing
+          .form-group
+            #editor 
 
-    blockquote
-      p
-      | Enter test arguments for your code below. Comma separated, strings in quotes, arrays in square brackets. Ex. 100, "One Hundred", ["An", "Array", "of", "Strings"]
+          button.btn.btn-primary(type='button', onclick='compile()') Compile Your Code
+          | &nbsp;&nbsp; Make sure to compile your code after any changes before running tests.
 
-    form(role='form')
-      .form-group
-        input#args(type='text', class='col-xs-8')
-      br
-      br
-      button.btn.btn-primary(type='button', onclick='testProblem()') Run Your Test
+        h3(style='padding-top:10px') Testing Panel
 
-    h3(style='padding-top:10px') Run System Tests
+        p 
+          | Enter test arguments for your code below. 
+          br
+          | Comma separated, strings in quotes, arrays in square brackets. Ex. 100, "One Hundred", ["An", "Array", "of", "Strings"]
 
-    blockquote
-      p
-      | When your code is complete and you are satisified with its functionality, run the system tests to determine whether it passes. You can run the system tests as many times as you deem necessary. The test results will display in the table below. When all tests pass, submit your code to receive your 'golden ticket' to TCO14.
+        form(role='form')
+          .form-group
+            .row
+              .col-md-8
+                input#args.form-control(type='text')
+              .col-md-4
+                button.btn.btn-primary(type='button', onclick='testProblem()') Run Your Test
 
-    button.btn.btn-primary#submitBtn(type='button', onclick='submit()') Run System Tests 
-    | &nbsp;
-    button.btn.btn-success#submitCodeBtn(type='button', onclick='submitCode()') Finished? Submit your code! 
+        h3 Run System Tests
 
-    #testResultsPanel
+        p
+          | When your code is complete and you are satisified with its functionality, run the system tests to determine whether it passes. You can run the system tests as many times as you deem necessary. The test results will display in the table below. When all tests pass, submit your code to receive your 'golden ticket' to TCO14.
+          br
 
-      h3(style='padding-top:10px') System Test Results
+          button.btn.btn-primary#submitBtn(type='button', onclick='submit()') Run System Tests 
+          | &nbsp;
+          button.btn.btn-success#submitCodeBtn(type='button', onclick='submitCode()') Finished? Submit your code! 
 
-      table#testresults.table
-        thead
-          tr
-            th Succeeded
-            th Expected
-            th Actual
-            th Args
+        #testResultsPanel
+
+          h3 System Test Results
+
+          table#testresults.table
+            thead
+              tr
+                th Succeeded
+                th Expected
+                th Actual
+                th Args

@@ -26,9 +26,10 @@ html
 
     != css('styles')
   body
-    include partials/navbar
+    header
+        include partials/navbar
 
-    .container
+    main
       include partials/flash
       block content
 

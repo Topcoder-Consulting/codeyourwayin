@@ -2,11 +2,37 @@ extends ../layout
 
 block content
   if (typeof user.goldenTicket === 'undefined')
-    a(href='/arena')
-      img(src='/img/results-incomplete.png')  
+    .member-area
+      .container
+        h1 You haven't earned your
+          br
+          strong TCO Ticket yet.
+        a(href="http://community.topcoder.com/tco14/sponsor/sequoia-capital/").sponsor
+          span.sr-only sponsored by Sequoia Capital 
+        p.lead
+          | Solve the problem first, 
+          br
+          | then come back over here to  get your ticket.
+        p.sub-lead
+          | Learn more about how to compete in these types of challenges 
+          br
+          | at topcoder <a href="http://help.topcoder.com/data-science/" target="_blank">here</a>.
   else
-    h1 Congratulations!!
-    |  Use the registerion code below to claim your free entry into TCO14. Enter the code at the bottom of the 
-    a(href='http://appirio.regsvc.com/E2', target='_blank') TCO14 Registration page. 
-    p.lead(style='margin:10px')
-      = user.goldenTicket  
+    .member-area.congratulations
+      .container
+        h1 
+          strong Congratulations!!
+        a(href="http://community.topcoder.com/tco14/sponsor/sequoia-capital/").sponsor
+          span.sr-only sponsored by Sequoia Capital 
+        p.lead
+          |  Use the registerion code below to claim your free entry into TCO14. 
+          br
+          | Enter the code at the bottom of the 
+          a(href='http://appirio.regsvc.com/E2', target='_blank') TCO14 Registration page. 
+        .reg-code
+          = user.goldenTicket  
+        p 
+          | Have questions? Check out our 
+          a(href="http://community.topcoder.com/tco14/developer-events/overview/event-faqs/", target="_blank") 
+            strong FAQs 
+          | about the TCO14.
