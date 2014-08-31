@@ -1,5 +1,23 @@
 extends layout
 
 block content
-  a(href='/arena')
-    img(src='/img/home.png')
+	.landing-page.text-center
+		.container-fluid
+			.jumbotron
+				h1 The Ultimate Programming and Designing Tournament
+				.container
+					p Including first-ever TCO Developer Conference, Celebrity Match, &amp; Chances to win t-shirts and up to $25,000 in cash!
+					p 
+						a.btn-cywi(href="/arena", role="button")
+							span.sr-only Click Here To Code Your Way In
+						a.sponsor(href="http://community.topcoder.com/tco14/sponsor/sequoia-capital/")
+							span.sr-only Sponsored by Sequoia Capital
+			.location
+				p 
+					Pier 48 near At&amp;t Park,
+					br
+					San Francisco, California
+					br
+					span.date November 16 – 19, 2014
+			.call-to-action
+				a.btn.btn-lg(href="http://community.topcoder.com/tco14/developer-events/overview/", role="button", target="_blank") LEARN MORE ABOUT THE TCO14 HERE

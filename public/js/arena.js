@@ -4,7 +4,7 @@ var roomID  = $('#roomId').val();
 var componentID  = $('#componentId').val();
 var roundID = parseInt($('#roundId').val());
 var componentLoaded = false;
-
+  
 $(function(){
   editor = ace.edit('editor');
   editor.setTheme("ace/theme/monokai");
@@ -105,8 +105,9 @@ socket.on('GetProblemResponse', function (data) {
   var paramNames = _.pluck(problem.allParamNames[0]);
 
   // definition
-  var definition = '<b>Definition</b>';
-  definition += '<br/>&nbsp;&nbsp;Class: ' +problem.className;
+  var definition = '<h3>Definition</h3>';
+  definition += '<p class="indent">';
+  definition += '&nbsp;&nbsp;Class: ' +problem.className;
   definition += '<br/>&nbsp;&nbsp;Method: ' +problem.methodName + ' (be sure your method is public)';
   definition += '<br/>&nbsp;&nbsp;Parameters: ' + _.pluck(problem.allParamTypes[0], 'description').join(', ');
   definition += '<br/>&nbsp;&nbsp;Returns: ' + _.pluck(problem.allReturnTypes, 'description').join(', '); 
@@ -116,26 +117,32 @@ socket.on('GetProblemResponse', function (data) {
     if (i < paramTypes.length-1) definition += ', ';
   }
   definition += ')';
+  definition += "</p>";
   $('#definition').html(definition);
 
   // constraints
-  var constraints = '<b>Constraints</b>';
+  var constraints = '<h3>Constraints</h3>';
+  constraints += '<p class="indent">';
   for (i = 0; i<problem.constraints.length;i++) {
-    constraints += '<br/>&nbsp;&nbsp;' + problem.constraints[i].text;
+    if(i > 0) constraints += "<br/>";
+    constraints += '&nbsp;&nbsp;' + problem.constraints[i].text;
   }
+  constraints += "</p>";
   $('#constraints').html(constraints);
 
   // examples
-  var examples = '<b>Examples</b>';
+  var examples = '<h3>Examples</h3>';
+  examples += '<p class="indent">';
   for (i = 0; i<problem.testCases.length;i++) {
-    examples += '<br/>Example #' + (i+1);
+    if(i > 0) examples += "<br>";
+    examples += 'Example #' + (i+1);
     for (j = 0; j<problem.testCases[i].input.length;j++) {
       examples += '<br/>&nbsp;&nbsp;' + problem.testCases[i].input[j];  
     }
     examples += '<br/>Returns: ' + problem.testCases[i].output + '<br/>'; 
   }
+  examples += "</p>";
   $('#examples').html(examples);  
-
 });  
 
 // response from submitting solution
