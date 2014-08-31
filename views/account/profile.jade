@@ -1,34 +1,36 @@
 extends ../layout
 
 block content
-  .page-header
-    h3 Code Your Way In "Golden Tickets"
-    hr
-    if (typeof user.goldenTicket != 'undefined')
-      | Use the registerion code below to claim your free entry into TCO14. Enter the code at the bottom of the 
-      a(href='http://appirio.regsvc.com/E2', target='_blank') TCO14 Registration page. 
-      p.lead(style='margin:10px')
-        = user.goldenTicket
-    else
-      | No "golden tickets" yet for TCO14. Head over to the Arena and get coding!
+  .member-area
+    .container
+      .page-header
+        h3 Code Your Way In "Golden Tickets"
+        hr
+        if (typeof user.goldenTicket != 'undefined')
+          | Use the registerion code below to claim your free entry into TCO14. Enter the code at the bottom of the 
+          a(href='http://appirio.regsvc.com/E2', target='_blank') TCO14 Registration page. 
+          p.lead(style='margin:10px')
+            = user.goldenTicket
+        else
+          | No "golden tickets" yet for TCO14. Head over to the Arena and get coding!
 
-    h3(style="padding-top:25px") Profile Information    
+        h3(style="padding-top:25px") Profile Information    
 
-  form.form-horizontal(action='/account/profile', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group
-      label.col-sm-2.control-label(for='name') Handle
-      .col-sm-4
-        input.form-control(type='text', name='name', id='name', value='#{user.profile.name}', disabled)
-    .form-group
-      label.col-sm-2.control-label(for='email') Email
-      .col-sm-4
-        input.form-control(type='email', name='email', id='email', value='#{user.email}', disabled)        
-    .form-group
-      label.col-sm-2.control-label(for='location') Location
-      .col-sm-4
-        input.form-control(type='text', name='location', id='location', value='#{user.profile.location}', disabled)
-    .form-group
-      label.col-sm-2.control-label(for='gravatar') Gravatar
-      .col-sm-4
-        img(src="#{user.profile.picture ? user.profile.picture : user.gravatar()}", class='profile', width='100', height='100')
+      form.form-horizontal(action='/account/profile', method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group
+          label.col-sm-2.control-label(for='name') Handle
+          .col-sm-4
+            input.form-control(type='text', name='name', id='name', value='#{user.profile.name}', disabled)
+        .form-group
+          label.col-sm-2.control-label(for='email') Email
+          .col-sm-4
+            input.form-control(type='email', name='email', id='email', value='#{user.email}', disabled)        
+        .form-group
+          label.col-sm-2.control-label(for='location') Location
+          .col-sm-4
+            input.form-control(type='text', name='location', id='location', value='#{user.profile.location}', disabled)
+        .form-group
+          label.col-sm-2.control-label(for='gravatar') Gravatar
+          .col-sm-4
+            img(src="#{user.profile.picture ? user.profile.picture : user.gravatar()}", class='profile', width='100', height='100')

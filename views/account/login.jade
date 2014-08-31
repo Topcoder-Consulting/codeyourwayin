@@ -1,5 +1,17 @@
 extends ../layout
 
 block content
-  a(href='https://www.topcoder.com/?action=showlogin')
-    img(src='/img/signin.png')
+  .landing-page
+    .container
+      h1 Sign in Now on topcoder.com
+        br
+        strong to claim your TCO Ticket
+      p.lead Learn more about how to compete in these types
+        br 
+        of challenges at topcoder 
+        a(href="http://help.topcoder.com/data-science/", target="_blank") here
+        | .
+      .col-md-8.text-right  
+        hr
+        a.sponsor(href="http://community.topcoder.com/tco14/sponsor/sequoia-capital/")
+          span.sr-only Sponsored by Sequoia Capital
