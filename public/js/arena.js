@@ -106,12 +106,12 @@ socket.on('GetProblemResponse', function (data) {
   var paramNames = _.pluck(problem.allParamNames[0]);
 
   // definition
-  var definition = '<b>Definition</b>';
-  definition += '<br/>&nbsp;&nbsp;Class: ' +problem.className;
-  definition += '<br/>&nbsp;&nbsp;Method: ' +problem.methodName + ' (be sure your method is public)';
-  definition += '<br/>&nbsp;&nbsp;Parameters: ' + _.pluck(problem.allParamTypes[0], 'description').join(', ');
-  definition += '<br/>&nbsp;&nbsp;Returns: ' + _.pluck(problem.allReturnTypes, 'description').join(', '); 
-  definition += '<br/>&nbsp;&nbsp;Method signature: ' + _.pluck(problem.allReturnTypes, 'description').join(', ') + ' ' + problem.methodName + '(';
+  var definition = '';
+  definition += 'Class: ' +problem.className;
+  definition += '<br/>Method: ' +problem.methodName + ' (be sure your method is public)';
+  definition += '<br/>Parameters: ' + _.pluck(problem.allParamTypes[0], 'description').join(', ');
+  definition += '<br/>Returns: ' + _.pluck(problem.allReturnTypes, 'description').join(', '); 
+  definition += '<br/>Method signature: ' + _.pluck(problem.allReturnTypes, 'description').join(', ') + ' ' + problem.methodName + '(';
   for (i = 0; i<paramTypes.length;i++) {
     definition += paramTypes[i] + ' ' + paramNames[i];
     if (i < paramTypes.length-1) definition += ', ';
@@ -120,20 +120,20 @@ socket.on('GetProblemResponse', function (data) {
   $('#definition').html(definition);
 
   // constraints
-  var constraints = '<b>Constraints</b>';
+  var constraints = '';
   for (i = 0; i<problem.constraints.length;i++) {
-    constraints += '<br/>&nbsp;&nbsp;' + problem.constraints[i].text;
+    constraints += problem.constraints[i].text + '<br/>';
   }
   $('#constraints').html(constraints);
 
   // examples
-  var examples = '<b>Examples</b>';
+  var examples = '';
   for (i = 0; i<problem.testCases.length;i++) {
-    examples += '<br/>Example #' + (i+1);
+    examples += '<p class="indent"> Example #' + (i+1);
     for (j = 0; j<problem.testCases[i].input.length;j++) {
-      examples += '<br/>&nbsp;&nbsp;' + problem.testCases[i].input[j];  
+      examples += '<br/>' + problem.testCases[i].input[j];  
     }
-    examples += '<br/>Returns: ' + problem.testCases[i].output + '<br/>'; 
+    examples += '<br/>Returns: ' + problem.testCases[i].output + '</p>'; 
   }
   $('#examples').html(examples);  
 
