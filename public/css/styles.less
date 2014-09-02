@@ -3,8 +3,56 @@
 @import "lib/bootstrap-social";
 @import "themes/default";
 
+// Colors
+@dark-blue: #0071bc;
+@blue: #29abe2;
+@green: #d9e021;
+@orange: #f7931e;
+@dark-orange: #ff6700;
+
+// Font Weight
+@font-light: 300;
+@font-normal: 400;
+@font-semi-bold: 600;
+@font-bold: 700;
+@font-extra-bold: 800;
+
+
 // Scaffolding
 // -------------------------
+
+h1 {
+    background: url(/img/bar.png) 0 100% no-repeat;
+    background-size: 40px 5px;
+    color: @blue;
+    font-size: 18px;
+    font-weight: @font-bold;
+    line-height: 24px;
+    padding-bottom: 10px;
+    strong {
+        color: @dark-blue;
+        font-weight: @font-extra-bold;
+    }    
+}
+h2 {
+    font-size: 21px;
+    font-weight: @font-semi-bold;
+}
+h3 {
+    font-size: 16px;
+    font-weight: @font-semi-bold;
+}
+hr {
+    border-color: rgba(0,0,0,0.1);
+}
+a {
+    color: @orange;
+    &:hover{
+        color: @dark-orange;
+        text-decoration: none;
+    }
+}
+
 
 #editor { 
     height: 300px;
@@ -16,32 +64,457 @@ html {
   min-height: 100%;
 }
 
+header {
+    background: url(/img/header.png) repeat-x;
+    height: 0px;
+    position: relative;
+    z-index: 2;
+    nav.navbar {
+        background: #333;
+        border: 0;
+        .navbar-brand {
+            padding: 10px 15px;
+        }
+        .navbar-nav img {
+            width: 30px;
+            height: 30px;
+            margin: -15px 15px -15px;
+        }
+        .nav {
+            li {
+                a {
+                    background-color: transparent;
+                    color: #999;
+                    font-size:  15px;
+                    font-weight: @font-semi-bold;
+                    line-height: 30px;
+                    text-transform: uppercase;
+                    &:hover {                        
+                        color: #ccc;
+                    }
+                }
+                &.active {
+                    a {
+                        color: #fff;                        
+                    }
+                }
+            }
+            &.navbar-right {
+                li {
+                    a {
+                        color: @green;
+                        font-size: 14px;
+                        font-weight: @font-light;
+                        text-transform: none;
+                        &:hover {
+                            color:  #fff;
+                        }
+                    }
+                }
+                &.logged {
+                    li {
+                        a {
+                            color: #999;
+                            &:hover {
+                                color:  #fff;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .navbar-toggle {
+        border-color: @orange;
+        &:hover {
+            border-color: @dark-orange;
+            .icon-bar {
+                background-color: @dark-orange;
+            }
+        }
+        .icon-bar {
+            background-color: @orange;
+        }
+    }
+}
+
+
+main {
+    background: url(/img/main-bg.gif);
+    position: relative;
+    z-index: 1;
+}
+
+/* Landing Page class */
+.landing-page {
+    background: url(/img/lp.jpg) 50% 0 no-repeat;
+    background-size: cover;
+    min-height: 800px;
+    .jumbotron {
+        padding: 15px 0 0;
+        h1 {
+            background: transparent;
+            color: @dark-blue;
+            font-size: 21px;
+            font-weight: @font-bold;
+            line-height: 30px;
+            margin-bottom: 10px;
+            padding-bottom: 0;
+        }
+        p {
+            font-size:18px;
+            font-weight: @font-normal;
+            margin: 15px 0;
+        }
+    }
+    .location {
+        font-size: 21px;
+        font-weight: @font-semi-bold;
+        .date {
+            color: @dark-blue;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+    }
+    .call-to-action {
+        margin-top: 100px;
+    }
+    .sponsor {
+        background-size: contain;
+        position: relative;
+        margin: 0;
+        width: 243px;
+    }
+}
+
+/* Big Code Your Way In button */
+.btn-cywi {
+    background: url(/img/cywi_button.png) no-repeat;
+    background-size: cover;
+    display: block;
+    height: 70px;
+    margin: 0 auto;
+    width: 243px;				
+    &:hover { background-position: 0 -70px; }
+	&:active { background-position: 0 -140px; }
+}
+
+
+/* Sponsor */
+.sponsor {
+    background: url(/img/cywi_sponsor.png) no-repeat;
+    display: inline-block;
+    height: 23px;
+    width: 363px;
+}
+
+
+/* Members Area */
+.member-area {
+    background: url(/img/member-bg.png) repeat-x;
+    font-size: 16px;
+    min-height: 800px;
+    .container {    
+        position:  relative;
+        z-index: 1;
+    }
+    .sponsor {
+        position: absolute;
+        right: 15px;
+        top: 10px;
+        width: 243px;
+    }
+    h1 {
+        margin-top: 45px;
+    }
+    p {
+        color:  #000;        
+        margin-bottom:  20px;
+        &.indent {
+            overflow: auto;
+        }
+    }
+    .coding-area {
+        background: #313131;
+        margin-bottom: 20px;
+        min-height: 150px;
+        span {
+            color: #fff;
+            display: block;
+            font-size: 21px;
+            line-height: 150px;
+            text-align: center;            
+        }
+    }
+}
+
+
+/* Congratulations */
+.congratulations {
+    text-align: center;
+    h1 {
+        background-position: 50% 100%;
+        font-size: 24px;
+        margin: 75px 0 30px;
+    }
+    p {
+        font-size: 18px;
+        &.lead {
+            font-size: 21px;
+            font-weight: @font-semi-bold;
+        }
+    }
+    .reg-code {
+        background: url(/img/reg-code-bg.png) 50% 0 no-repeat;
+        background-size: cover;
+        color: #fff;
+        font-size: 30px;
+        font-weight: @font-bold;
+        height: 71px;
+        line-height: 71px;
+        text-align: center;
+        margin: 40px auto 60px;
+        width: 240px;
+    }
+}
+
+
+
+/* Utilities */
+.jumbotron {
+    background: transparent;
+}
+.btn-lg {
+    background: rgba(0,0,0,0.3);
+    border: 3px solid @dark-blue;
+    border-radius: 3px;
+    color: @orange;
+    font-size: 12px;
+    font-weight:  @font-bold;
+    &:hover {
+        background: rgba(0,0,0,0.75);
+        color: #fff;   
+    }
+}
+.btn-primary {
+    background: @orange;
+    border: none;
+    border-bottom: 5px solid @dark-orange;
+    font-size: 16px;
+    font-weight: @font-bold;
+    text-transform: uppercase;
+    &:hover {
+        background: #ff6700;
+        border-bottom: 5px solid @dark-orange;
+        position: relative;
+        top: 1px;
+    }
+}
+.lead {
+    font-size: 21px;   
+    font-weight: @font-normal;
+}
+.sub-lead {
+    font-size: 18px;
+    font-weight: @font-normal;
+}
+
+/* Forms */
+select {
+    background: @orange;
+    border: none;
+    border-radius: 2px;
+    color: #fff;
+    outline: none;
+    padding: 5px 10px;
+}
+.form-control {
+    margin-bottom: 5px;
+}
+
+/* Table */
+table.table {
+    th {
+        background: #fff;
+        border: none !important;
+    }
+    td {
+        border: none !important;
+        background: rgba(255,255,255,0.4) !important;
+    }
+    tbody {
+        tr {
+            &:nth-child(odd) {
+                td {
+                    background: rgba(255,255,255,0.2) !important;
+                }
+            }
+            &:hover {
+                td {
+                    background: rgba(140,198,63,0.2) !important;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Media Query for Responsiveness
+ */
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+
+    h1 {
+        background-size: 100px 10px;
+        font-size: 48px;
+        line-height: 60px;
+        padding-bottom: 20px;
+    }
+    
+    /* Landing Page class */
+    .landing-page {
+        min-height: 800px;
+        .jumbotron {
+            padding: 15px 30px 20px;
+            h1 {
+                font-size: 36px;
+                font-weight: @font-bold;
+                line-height: 42px;
+                margin-bottom: 10px;
+            }
+            p {
+                font-size:21px;
+                font-weight: @font-normal;
+                margin: 10px 0 0;
+            }
+            .sponsor {
+                margin-left: 80px;
+                top: -18px;
+                width: 363px;
+            }
+        }
+        .location {
+            font-size: 24px;
+            .date {
+                color: @dark-blue;
+            }
+        }
+        .call-to-action {
+            margin-top: 100px;        
+        }
+        .sponsor {
+            width: 363px;
+        }
+    }
+
+    /* Big Code Your Way In button */
+    .btn-cywi {
+		height: 141px;
+		margin: 0 auto;
+		width: 480px;					
+        &:hover { background-position: 0 -140px; }
+        &:active { background-position: 0 -282px; }
+	}
+
+    /* Members Area */
+    .member-area {
+        p {
+            &.indent {
+                margin-left: 40px;
+            }
+        }
+    }
+    
+    /* Congratulations */
+    .congratulations {
+        h1 {
+            font-size: 54px;
+            margin: 100px 0 75px;
+        }
+        p {
+            font-size: 18px;
+            &.lead {
+                font-size: 21px;
+            }
+        }
+        .reg-code {
+            font-size: 60px;
+            height: 137px;
+            line-height: 137px;
+            margin: 40px auto 120px;
+            width: 460px;
+        }
+    }
+    
+    /* Utilities */
+    .btn-lg {
+        font-size: 24px;            
+    }
+    .lead {
+        font-size: 30px;
+    }
+    .sub-lead {
+        font-size: 24px;
+    }
+
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+    /* Congratulations */
+    .congratulations {
+        h1 {
+            font-size: 72px;
+        }
+    }    
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+
+    /* Landing Page class */
+    .landing-page {
+        .jumbotron {
+            p {
+                margin: 20px 14%;
+            }
+        }
+    }
+    
+
+}
+
+/* Special cases ( very large desktops ) */
+@media (min-width: 1680px) {
+    
+    /* Landing Page class */
+    .landing-page {
+        .jumbotron {
+            h1 {
+                font-size: 48px;
+                line-height: normal;
+            }
+            p {
+                font-size: 27px;
+                font-weight: @font-normal;
+                margin: 20px 14% 30px;
+            }
+        }
+    }
+    
+}
+
 body {
-  padding-top: 60px;
-  margin-bottom: 120px;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    background: #0a0a0a;
+    padding-top: 60px;
 }
 
 footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 90px;
-}
-
-// Navbar
-// -------------------------
-
-.navbar-nav img {
-  width: 30px;
-  height: 30px;
-  margin: -15px 15px -15px;
-}
-
-.navbar-brand {
-  background: url(../img/tco14-logo.png) no-repeat left center;
-  background-size: 80px;
-  padding-left: 95px;
-  margin-left: 15px;
+    background: #0a0a0a;
+    color: #858585;
+    font-size: 14px;
+    line-height:  60px;
+    text-align: center;
 }
 
 // Alerts

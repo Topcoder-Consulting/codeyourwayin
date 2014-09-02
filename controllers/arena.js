@@ -68,7 +68,7 @@ exports.submit = function(req, res) {
               updateUser(req.user, code)
                 .then(function(code) {
                   console.log(code);
-                })
+                });
             })
           .fail(function(err) {
             console.log('Error running all system tests: '+err);
@@ -79,10 +79,10 @@ exports.submit = function(req, res) {
       } else {
         User.findByIdAndUpdate(req.user._id, { $set: { verificationStatus: msg }}, function(err, user){
           if (err) console.log(err);
-        });          
+        });
       }
 
-    });    
+    });
 
     res.render('arena/submit', {
       title: 'Results',
@@ -92,7 +92,7 @@ exports.submit = function(req, res) {
   } else {
     req.flash('info', { msg: "You've already coded your way into TCO14. Your code is below." });
     res.redirect('/arena/results');
-  }        
+  }
 
 };
 
