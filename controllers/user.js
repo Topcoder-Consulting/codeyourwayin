@@ -19,6 +19,19 @@ exports.getLogin = function(req, res) {
 };
 
 /**
+ * GET /postred
+ * Post registration page
+ */
+
+exports.postreg = function(req, res) {
+  // if they logged in after registering, then send them to arena
+  if (req.user) return res.redirect('/arena');
+  res.render('account/postreg', {
+    title: 'Sign In'
+  });
+};
+
+/**
  * POST /login
  * Sign in using email and password.
  * @param email

@@ -125,15 +125,15 @@ app.use(function(req, res, next) {
           var user = new User({
             email: mongoUser.email,
             password: mongoUser.password,
-            profile: { 
-              name: mongoUser.handle, 
+            profile: {
+              name: mongoUser.handle,
               picture: mongoUser.picture,
               location: mongoUser.location
             }
           });
 
           if (mongoUser.exists) {
-            console.log('Found ' + mongoUser.handle + ' in mongodb. Authenticating user.'); 
+            console.log('Found ' + mongoUser.handle + ' in mongodb. Authenticating user.');
             // hack the email and password into the request for passport
             req.body.email = mongoUser.email;
             req.body.password = mongoUser.password;
@@ -152,16 +152,16 @@ app.use(function(req, res, next) {
                 if (err) return next(err);
                 res.redirect(req.session.returnTo || '/');
               });
-            });       
+            });
           }
 
         }).fail(function(err) {
           res.redirect('/doh');
-        });   
+        });
     // couldn't find cookie
     }  else {
       next();
-    }  
+    }
   } else {
     next();
   }
@@ -193,6 +193,7 @@ app.post('/arena/submit', passportConf.isAuthenticated, arenaController.submit);
 app.get('/arena/results', passportConf.isAuthenticated, arenaController.results);
 app.get('/arena/status', passportConf.isAuthenticated, arenaController.status);
 app.get('/doh', homeController.doh);
+app.get('/postreg', userController.postreg);
 
 /**
  * OAuth sign-in routes.

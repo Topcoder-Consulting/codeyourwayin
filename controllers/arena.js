@@ -15,7 +15,7 @@ exports.index = function(req, res) {
   if (typeof req.user.goldenTicket === 'undefined') {
 
     if (req.query.failure) {
-      req.flash('errors', { msg: 'At least one of your tests failed. Please check your code and run system tests again before submitting your code.'});      
+      req.flash('errors', { msg: 'At least one of your tests failed. Please check your code and run system tests again before submitting your code.'});
     }
 
     getProblem(req.user)
@@ -26,11 +26,11 @@ exports.index = function(req, res) {
           roundId: problem.roundId,
           roomId: problem.roomId,
           componentId: problem.componentId
-        });      
+        });
       })
       .fail(function(err) {
         console.log(err)
-      });        
+      });
 
   } else {
     req.flash('info', { msg: "You've already coded your way into TCO14. Your code is below." });
@@ -42,21 +42,21 @@ exports.submit = function(req, res) {
 
   if (typeof req.user.goldenTicket === 'undefined') {
 
-    data = { 
+    data = {
       sso: req.cookies.tcsso,
       roomID: req.body.roomId,
       componentID: req.body.componentId,
       user: req.user
-    }    
+    }
 
     // kick off the worker process
-    var worker = childProcess.fork("./workers/verify.js");  
-    worker.send(data);   
+    var worker = childProcess.fork("./workers/verify.js");
+    worker.send(data);
 
     // set the status of the code check process to queued
     User.findByIdAndUpdate(req.user._id, { $set: { verificationStatus: 'Queued' }}, function(err, user){
       if (err) console.log(err);
-    });    
+    });
 
     worker.on('message', function(msg){
 
@@ -114,26 +114,26 @@ exports.status = function(req, res) {
 };
 
 var updateUser = function(user, code) {
-  var deferred = Q.defer();  
+  var deferred = Q.defer();
   User.findByIdAndUpdate(user._id, { $set: { goldenTicket: code }}, function(err, doc){
     deferred.resolve(code);
-  });  
-  return deferred.promise;  
+  });
+  return deferred.promise;
 }
 
 // finds an available discount code and reserves it
 var getDiscountCode = function() {
-  var deferred = Q.defer(); 
+  var deferred = Q.defer();
   DiscountCode.findOneAndUpdate({available: 1}, { $set: {available: 0 }}, function(err, record) {
-    if (err) deferred.resolve('NO_CODES_AVAILABLE'); 
-    if (!err) deferred.resolve(record.code); 
-  }); 
-  return deferred.promise;  
+    if (err) deferred.resolve('NO_CODES_AVAILABLE');
+    if (!err) deferred.resolve(record.code);
+  });
+  return deferred.promise;
 }
 
 var getProblem = function(user) {
 
-  var deferred = Q.defer(); 
+  var deferred = Q.defer();
   var fetchNewProblem = true;
 
   // add a day to the last time they got a new problem
@@ -154,16 +154,16 @@ var getProblem = function(user) {
           user.lastNewProblemDate =Date();
           user.problems.push(problem[0]);
           user.save();
-        });      
+        });
         // return this problem
-        deferred.resolve(problem[0]); 
+        deferred.resolve(problem[0]);
       });
-    });    
+    });
 
   } else {
     // return their last problem
-    deferred.resolve(user.problems[user.problems.length-1]);     
+    deferred.resolve(user.problems[user.problems.length-1]);
   }
 
-  return deferred.promise;  
+  return deferred.promise;
 }
